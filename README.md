@@ -8,3 +8,8 @@ SCR will be a website that allows users to create recipes made of steps, and sha
 Here is the link to the feature map of the project : https://trello.com/b/yhTjIBsG/my-trello-board
 
 
+### Note about scaffold code
+
+The assignment requires to add scaffold code to this repository. I am currently unsure of what it is, and it will be added soon.
+
+
