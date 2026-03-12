@@ -1,5 +1,5 @@
 .env        # File in which put the database connection information
 
-node_modules
+node_modules/
 
 .idea/
