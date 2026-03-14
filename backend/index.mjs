@@ -4,12 +4,18 @@ import 'dotenv/config';
 
 import express from 'express';
 
-const app = express();
+import userRoutes from './routes/users.mjs'
+
 const PORT = process.env.PORT || 3000;
+const DB_URL = process.env.DATABASE_URL;
 
-app.use(express.json())
+const app = express();
 
 
+app.use(express.json());
+
+
+app.use('/api/users', userRoutes);
 
 // Health check
 app.get('/', (req, res) => {
