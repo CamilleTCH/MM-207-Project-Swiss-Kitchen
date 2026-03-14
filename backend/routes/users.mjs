@@ -62,6 +62,44 @@ router.post("/register", async (req, res) => {
 });
 
 
+router.put('/:id', async (req, res) => {
+    const { id } = req.params;
+    const { username, email, password } = req.body;
+
+
+
+    try {
+        const text_fields = [];
+
+
+        if (username) { text_fields.push(`username = '${username}'`) }
+        if (email) { text_fields.push(`email = '${email}'`)}
+        if (password) {
+            const hashed = await bcrypt.hash(password, 10);
+            text_fields.push(`password = '${hashed}'`)
+        }
+
+        if (text_fields.length === 0){
+            return res.status(400).json({ error: 'No fields to update'});
+        } 
+
+        // TODO this sql statement won't create any error if the id doesn't exist. Is that a problem ? 
+        const result = await pool.query(
+            `UPDATE users SET ${text_fields.join(', ')} WHERE id = ${id}
+            RETURNING id, username, email, created_at`
+        );
+
+        res.json({ user: result.rows[0] });
+
+    } catch (err) {
+
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+
+    }
+});
+
+
 
 router.delete("/:id", async (req, res) => {
     const { id } = req.params;
