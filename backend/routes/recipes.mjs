@@ -7,6 +7,19 @@ import { validate_difficulty_level, validate_dish_type, validate_step_info } fro
 
 const router = express.Router();
 
+function validateStepList(steps, res){
+    for (let i = 1; i < steps.length + 1; ++i) {
+        const step = steps[i - 1];
+        const { step_number, name, estimated_time_in_seconds } = step;
+        const valid_step_info = validate_step_info(step_number, name, estimated_time_in_seconds);
+        if (!valid_step_info.valid) {
+            return_error_message(res, http_code.bad_request, `Step ${i} in the request is not valid. ${valid_step_info.message}`);
+            return false;
+        }
+    }
+    return true;
+}
+
 
 router.post('/', async (req, res) => {
     if (!req.body) {
@@ -29,13 +42,7 @@ router.post('/', async (req, res) => {
         steps = []  // to avoid having to verify the condition multiple times later
     }
 
-    for (const step of steps) {
-        const { step_number, name, estimated_time_in_seconds } = step;
-        let valid_step_info = validate_step_info(step_number, name, estimated_time_in_seconds);   // ignore the recipe_id verification, since the id doesn't exist yet
-
-        if (!valid_step_info.valid) return return_error_message(res, http_code.bad_request, `This step ${step} is not valid. ${valid_step_info.message}`);
-    }
-
+    if (!validateStepList(steps, res)) return;
 
     const client = await pool.connect();
     try {
@@ -160,12 +167,7 @@ router.put('/:id', async (req, res) => {
         return res.status(http_code.bad_request).json({ error: 'No fields to update' });
     }
 
-    for (const step of steps) {
-        const { step_number, name, estimated_time_in_seconds } = step;
-        let valid_step_info = validate_step_info(step_number, name, estimated_time_in_seconds);
-
-        if (!valid_step_info.valid) return return_error_message(res, http_code.bad_request, `This step ${step} is not valid. ${valid_step_info.message}`);
-    }
+    if (!validate_steps(steps, res)) return;
 
 
     const client = await pool.connect();
@@ -183,7 +185,7 @@ router.put('/:id', async (req, res) => {
         const recipe = recipeResult.rows[0];
 
 
-        // // Insert the steps
+        // Insert the steps
         for (const step of steps) {
             const { name, step_number, description, estimated_time_in_seconds } = step;
             const stepResult = await client.query(
@@ -264,7 +266,7 @@ router.delete("/:id/clearSteps", async (req, res) => {
 
         res.status(http_code.ok).json({
             message: `Steps of the recipe with id ${recipe_id} were deleted`,
-            recipe: {...recipeResult.rows[0], steps: [] }
+            recipe: { ...recipeResult.rows[0], steps: [] }
 
         });
     } catch (err) {
