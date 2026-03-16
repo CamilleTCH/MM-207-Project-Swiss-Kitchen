@@ -1,18 +1,16 @@
 import express from 'express';
 import pool from '../db_interaction.mjs';
 import { http_code, pg_errors } from '../global_stuff.mjs';
+import { return_error_message } from '../utils.mjs';
 
 import { validate_difficulty_level, validate_dish_type, validate_step_info } from '../entry_validations.mjs';
 
 const router = express.Router();
 
-function return_error_message(res, code, message) {
-    return res.status(code).json({ error: message });
-}
 
 router.post('/', async (req, res) => {
     if (!req.body) {
-        return res.status(http_code.bad_request).json({ error: "Need appropriate body" });  // TODO Explain more ? 1 is this really needed ?
+        return res.status(http_code.bad_request).json({ error: "Need appropriate body" });  // TODO Explain more ? + is this really needed ?
     }
 
     const { name, creator_user_id, description, dish_type, difficulty_level } = req.body;
@@ -32,7 +30,8 @@ router.post('/', async (req, res) => {
     }
 
     for (const step of steps) {
-        let valid_step_info = validate_step_info(step, true);   // ignore the recipe_id verification, since the id doesn't exist yet
+        const { step_number, name, estimated_time_in_seconds } = step;
+        let valid_step_info = validate_step_info(step_number, name, estimated_time_in_seconds);   // ignore the recipe_id verification, since the id doesn't exist yet
 
         if (!valid_step_info.valid) return return_error_message(res, http_code.bad_request, `This step ${step} is not valid. ${valid_step_info.message}`);
     }
@@ -73,7 +72,7 @@ router.post('/', async (req, res) => {
 
         console.error("Error during recipe creation", err);
 
-        if (err.code === pg_errors.unique_constraint_violation && err.table === "step") {
+        if (err.code === pg_errors.uniqueConstraintViolation && err.table === "step") {
             return return_error_message(res, http_code.bad_request, "You tried to created multiple steps with the same step number for the same recipe");
         }
 
@@ -126,7 +125,6 @@ router.get("/:id", async (req, res) => {
 
         res.status(http_code.ok).json({ recipe: { ...result.rows[0], steps: stepsResult.rows }, message: "Here is the recipe" });
     } catch (err) {
-
         res.status(http_code.internal_server_error).json({ error: err.message || 'Internal server error' });
     }
 });
@@ -163,7 +161,8 @@ router.put('/:id', async (req, res) => {
     }
 
     for (const step of steps) {
-        let valid_step_info = validate_step_info(step, true);   // ignore the recipe_id verification, since the id doesn't exist yet
+        const { step_number, name, estimated_time_in_seconds } = step;
+        let valid_step_info = validate_step_info(step_number, name, estimated_time_in_seconds);
 
         if (!valid_step_info.valid) return return_error_message(res, http_code.bad_request, `This step ${step} is not valid. ${valid_step_info.message}`);
     }
@@ -205,7 +204,7 @@ router.put('/:id', async (req, res) => {
 
     } catch (err) {
         await client.query('ROLLBACK');
-        if (err.code === pg_errors.unique_constraint_violation && err.table === "step") {
+        if (err.code === pg_errors.uniqueConstraintViolation && err.table === "step") {
             return return_error_message(res, http_code.bad_request, "You tried to created multiple steps with the same step number for the same recipe");
         }
         console.error(err);

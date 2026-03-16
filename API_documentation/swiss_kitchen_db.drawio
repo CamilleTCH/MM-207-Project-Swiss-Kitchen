@@ -238,7 +238,7 @@
             <mxRectangle height="30" width="60" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="naP5K4uuWPWBA3LbFMPy-87" parent="naP5K4uuWPWBA3LbFMPy-85" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" value="estimated_seconds_time INT NOT NULL" vertex="1">
+        <mxCell id="naP5K4uuWPWBA3LbFMPy-87" parent="naP5K4uuWPWBA3LbFMPy-85" style="shape=partialRectangle;connectable=0;fillColor=none;top=0;left=0;bottom=0;right=0;align=left;spacingLeft=6;overflow=hidden;" value="estimated_time_in_seconds INT NOT NULL" vertex="1">
           <mxGeometry height="30" width="340" x="60" as="geometry">
             <mxRectangle height="30" width="340" as="alternateBounds" />
           </mxGeometry>

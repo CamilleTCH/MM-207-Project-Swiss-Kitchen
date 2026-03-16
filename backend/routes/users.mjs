@@ -3,7 +3,7 @@ import pool from '../db_interaction.mjs';
 import express from 'express';
 import bcrypt from 'bcrypt';
 
-import { http_code, pg_errors } from '../global_stuff.mjs'
+import { http_code, pg_errors, userPasswordHashRounds } from '../global_stuff.mjs'
 
 
 const router = express.Router();
@@ -40,7 +40,7 @@ router.post("/register", async (req, res) => {
     }
 
     try {
-        const hashedPassword = bcrypt.hash(password, 10);
+        const hashedPassword = bcrypt.hash(password, userPasswordHashRounds);
 
         const result = await pool.query(
             `INSERT INTO SK_User (username, email, password)
@@ -52,8 +52,8 @@ router.post("/register", async (req, res) => {
         res.status(http_code.created).json({ user: result.rows[0] });
     } catch (err) {
 
-        if (err.code === pg_errors.unique_constraint_violation) {
-            return res.status(409).json({ error: 'Username or email already taken' });
+        if (err.code === pg_errors.uniqueConstraintViolation) {
+            return res.status(http_code.conflict).json({ error: 'Username or email already taken' });
         }
         console.error(err);
         res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
@@ -71,7 +71,7 @@ router.put('/:id', async (req, res) => {
         if (username) { text_fields.push(`username = '${username}'`) }
         if (email) { text_fields.push(`email = '${email}'`)}
         if (password) {
-            const hashed = await bcrypt.hash(password, 10);
+            const hashed = await bcrypt.hash(password, userPasswordHashRounds);
             text_fields.push(`password = '${hashed}'`)
         }
 
@@ -88,7 +88,6 @@ router.put('/:id', async (req, res) => {
         res.status(http_code.ok).json({ user: result.rows[0] });
 
     } catch (err) {
-
         console.error(err);
         res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
     }

@@ -1,6 +1,7 @@
 
 export const pg_errors = {
-    unique_constraint_violation : '23505'
+    uniqueConstraintViolation : '23505',
+    unexistantForeignKey: '23503'
 };
 
 export const http_code = {
@@ -8,5 +9,8 @@ export const http_code = {
     created : 201,
     bad_request : 400,
     not_found: 404,
+    conflict: 409,
     internal_server_error : 500
 }
+
+export const userPasswordHashRounds = 10;
