@@ -86,5 +86,29 @@ router.put('/:stepNumber', async (req, res) => {
     }
 });
 
+router.delete('/:stepNumber', async (req, res) => {
+    const recipeId = Number(req.params.id);
+    if (!Number.isInteger(recipeId)) return return_error_message(res, http_code.bad_request, `parameter recipeId must be an integer, "${req.params.id}" is not`)
+    let stepNumber = Number(req.params.stepNumber);
+    if (!Number.isInteger(stepNumber)) return return_error_message(res, http_code.bad_request, `parameter stepNumber must be an integer, "${req.params.stepId}" is not`)
+
+    try {
+        const result = await pool.query(
+            'DELETE FROM Step WHERE step_number = $1 and related_recipe_id = $2',
+            [stepNumber ,recipeId]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(http_code.not_found).json({ error: 'Step not found' });
+        }
+
+        res.status(http_code.ok).json({ message: `Step with number ${stepNumber} of recipe with id ${recipeId} was deleted` });
+
+    } catch (err) {
+        console.error(err);
+        res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
+    }
+});
+
 
 export default router;
