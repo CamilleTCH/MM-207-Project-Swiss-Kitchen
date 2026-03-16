@@ -85,7 +85,7 @@
             <mxRectangle height="30" width="350" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="naP5K4uuWPWBA3LbFMPy-26" parent="1" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;" value="Recepe" vertex="1">
+        <mxCell id="naP5K4uuWPWBA3LbFMPy-26" parent="1" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;" value="Recipe" vertex="1">
           <mxGeometry height="210" width="380" x="400" y="350" as="geometry" />
         </mxCell>
         <mxCell id="naP5K4uuWPWBA3LbFMPy-27" parent="naP5K4uuWPWBA3LbFMPy-26" style="shape=partialRectangle;collapsible=0;dropTarget=0;pointerEvents=0;fillColor=none;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;top=0;left=0;right=0;bottom=1;" value="" vertex="1">

@@ -27,10 +27,10 @@ CREATE TABLE Recipe (
 
 CREATE TABLE Step (
   related_recipe_id INT NOT NULL,
-  step_number_id INT NOT NULL,
+  step_number INT NOT NULL,
   name VARCHAR(100) NOT NULL,
   description TEXT,
   estimated_time_in_seconds INT NOT NULL,
   FOREIGN KEY (related_recipe_id) REFERENCES Recipe(id),
-  PRIMARY KEY (related_recipe_id, step_number_id)
+  PRIMARY KEY (related_recipe_id, step_number)
 );

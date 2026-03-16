@@ -1,6 +1,6 @@
 import express from 'express';
 import pool from '../db_interaction.mjs';
-import { http_code } from '../global_stuff.mjs';
+import { http_code, pg_errors } from '../global_stuff.mjs';
 
 import { validate_difficulty_level, validate_dish_type, validate_step_info } from '../entry_validations.mjs';
 
@@ -56,7 +56,7 @@ router.post('/', async (req, res) => {
         for (let i = 0; i < steps.length; i++) {
             const { name, step_number, description, estimated_time_in_seconds } = steps[i];
             const stepResult = await client.query(
-                `INSERT INTO Step (related_recipe_id, step_number_id, name, description, estimated_time_in_seconds)
+                `INSERT INTO Step (related_recipe_id, step_number, name, description, estimated_time_in_seconds)
                 VALUES ($1, $2, $3, $4, $5)
                 RETURNING *`,
                 [created_recipe.id, step_number, name, description, estimated_time_in_seconds]
@@ -66,11 +66,15 @@ router.post('/', async (req, res) => {
         }
         await client.query('COMMIT');
 
-        res.status(201).json({ recipe: { ...created_recipe, steps: insertedSteps } });
+        res.status(http_code.created).json({ recipe: { ...created_recipe, steps: insertedSteps } });
     } catch (err) {
         await client.query('ROLLBACK');
         
         console.error("Error during recipe creation" , err);
+
+        if (err.code === pg_errors.unique_constraint_violation && err.table === "step"){
+            return return_error_message(res, http_code.bad_request, "You tried to created multiple steps with the same step number for the same recipe");
+        }
 
         res.status(http_code.internal_server_error).json({ error: err.message || 'Internal server error' });
     } finally {
@@ -79,8 +83,6 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-    console.log("IN GET ALL");
-
     try {
         const result = await pool.query(
             `SELECT r.name, u.username AS creator_username, r.description, r.dish_type, r.difficulty_level
@@ -93,6 +95,39 @@ router.get('/', async (req, res) => {
     } catch(err) {
         res.status(http_code.internal_server_error).json({ error: err.message || 'Internal server error' });
         return;
+    }
+});
+
+
+router.get("/:id", async (req, res) => {
+    const { id: recipe_id } = req.params;
+
+    if (!Number.isInteger(recipe_id)) return return_error_message(res, http_code.bad_request, `parameter id must be an integer, "${recipe_id}" is not`);
+
+    try {
+        const result = await pool.query(
+            `SELECT r.name, u.username AS creator_username, r.description, r.dish_type, r.difficulty_level
+            FROM Recipe AS r
+            JOIN SK_User AS u ON r.creator_user_id = u.id
+            WHERE r.id = $1
+            ;`,
+            [recipe_id]
+        );
+
+        if (result.rowCount === 0){ return return_error_message(res, http_code.not_found, `No recipe with id "${recipe_id}"`);}
+
+        const stepsResult = await pool.query(
+            `SELECT * FROM Step
+            WHERE related_recipe_id = $1
+            ORDER BY step_number ASC`,
+            [recipe_id]
+        );
+
+        res.status(http_code.ok).json({ recipe : {...result.rows[0], steps: stepsResult.rows}, message: "Here is the recipe"});
+    } catch(err) {
+        
+
+        res.status(http_code.internal_server_error).json({ error: err.message || 'Internal server error' });
     }
 });
 

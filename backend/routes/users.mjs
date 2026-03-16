@@ -3,7 +3,7 @@ import pool from '../db_interaction.mjs';
 import express from 'express';
 import bcrypt from 'bcrypt';
 
-import { errors } from '../global_stuff.mjs'
+import { pg_errors } from '../global_stuff.mjs'
 
 
 const router = express.Router();
@@ -53,7 +53,7 @@ router.post("/register", async (req, res) => {
         res.status(201).json({ user: result.rows[0] });
     } catch (err) {
 
-        if (err.code === errors.unique_constraint_violation) {
+        if (err.code === pg_errors.unique_constraint_violation) {
             return res.status(409).json({ error: 'Username or email already taken' });
         }
         console.error(err);
