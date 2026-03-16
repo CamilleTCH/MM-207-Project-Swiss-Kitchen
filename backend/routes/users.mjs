@@ -110,7 +110,6 @@ router.delete("/:id", async (req, res) => {
         res.json({ message: `Account with id ${id} was deleted` });
 
     } catch (err) {
-
         console.error(err);
         res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
     }

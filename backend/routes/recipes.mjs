@@ -164,10 +164,10 @@ router.put('/:id', async (req, res) => {
 
     for (const step of steps) {
         let valid_step_info = validate_step_info(step, true);   // ignore the recipe_id verification, since the id doesn't exist yet
-        
+
         if (!valid_step_info.valid) return return_error_message(res, http_code.bad_request, `This step ${step} is not valid. ${valid_step_info.message}`);
     }
-    
+
 
     const client = await pool.connect();
     try {
@@ -201,8 +201,8 @@ router.put('/:id', async (req, res) => {
             `);
 
         await client.query("COMMIT;");
-        res.status(http_code.ok).json({ recipe: { ...recipe, steps: allSteps.rows }});
-        
+        res.status(http_code.ok).json({ recipe: { ...recipe, steps: allSteps.rows } });
+
     } catch (err) {
         await client.query('ROLLBACK');
         if (err.code === pg_errors.unique_constraint_violation && err.table === "step") {
@@ -236,6 +236,44 @@ router.delete("/:id", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
+    }
+});
+
+
+router.delete("/:id/clearSteps", async (req, res) => {
+    const recipe_id = Number(req.params.id);
+    if (!Number.isInteger(recipe_id)) return return_error_message(res, http_code.bad_request, `parameter id must be an integer, "${req.params.id}" is not`);
+
+
+    const client = await pool.connect();
+    try {
+        client.query("BEGIN;");
+        const result = await client.query(
+            'DELETE FROM Step WHERE related_recipe_id = $1 RETURNING related_recipe_id',
+            [recipe_id]
+        );
+
+        if (result.rowCount === 0) {
+            client.query("ROLLBACK;");
+            return res.status(http_code.not_found).json({ error: `No recipe with id ${recipe_id} to delete the steps of.` });
+        }
+
+        const recipeResult = await client.query(
+            'SELECT * FROM Recipe WHERE id = $1',
+            [recipe_id]
+        );
+
+        res.status(http_code.ok).json({
+            message: `Steps of the recipe with id ${recipe_id} were deleted`,
+            recipe: {...recipeResult.rows[0], steps: [] }
+
+        });
+    } catch (err) {
+        client.query("ROLLBACK;");
+        console.error(err);
+        res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
+    } finally {
+        client.release();
     }
 });
 
