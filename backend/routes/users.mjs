@@ -3,7 +3,7 @@ import pool from '../db_interaction.mjs';
 import express from 'express';
 import bcrypt from 'bcrypt';
 
-import { pg_errors } from '../global_stuff.mjs'
+import { http_code, pg_errors } from '../global_stuff.mjs'
 
 
 const router = express.Router();
@@ -33,7 +33,6 @@ router.get("/:id", async (req, res) => {
 
 
 router.post("/register", async (req, res) => {
-
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
@@ -57,7 +56,7 @@ router.post("/register", async (req, res) => {
             return res.status(409).json({ error: 'Username or email already taken' });
         }
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
     }
 });
 
@@ -66,11 +65,8 @@ router.put('/:id', async (req, res) => {
     const { id } = req.params;
     const { username, email, password } = req.body;
 
-
-
     try {
         const text_fields = [];
-
 
         if (username) { text_fields.push(`username = '${username}'`) }
         if (email) { text_fields.push(`email = '${email}'`)}
@@ -80,7 +76,7 @@ router.put('/:id', async (req, res) => {
         }
 
         if (text_fields.length === 0){
-            return res.status(400).json({ error: 'No fields to update'});
+            return res.status(http_code.bad_request).json({ error: 'No fields to update'});
         } 
 
         // TODO this sql statement won't create any error if the id doesn't exist. Is that a problem ? 
@@ -89,13 +85,12 @@ router.put('/:id', async (req, res) => {
             RETURNING id, username, email, created_at`
         );
 
-        res.json({ user: result.rows[0] });
+        res.status(http_code.ok).json({ user: result.rows[0] });
 
     } catch (err) {
 
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
-
+        res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
     }
 });
 
@@ -111,7 +106,7 @@ router.delete("/:id", async (req, res) => {
         );
 
         if (result.rows.length === 0) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(http_code.not_found).json({ error: 'User not found' });
         }
 
         res.json({ message: `Account with ${id} was deleted` });
@@ -119,7 +114,7 @@ router.delete("/:id", async (req, res) => {
     } catch (err) {
 
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(http_code.bad_request).json({ error: 'Internal server error' });
     }
 });
 
