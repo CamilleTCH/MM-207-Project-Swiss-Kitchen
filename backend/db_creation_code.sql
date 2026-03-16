@@ -31,6 +31,6 @@ CREATE TABLE Step (
   name VARCHAR(100) NOT NULL,
   description TEXT,
   estimated_time_in_seconds INT NOT NULL,
-  FOREIGN KEY (related_recipe_id) REFERENCES Recipe(id),
+  FOREIGN KEY (related_recipe_id) REFERENCES Recipe(id) ON DELETE CASCADE,
   PRIMARY KEY (related_recipe_id, step_number)
 );

@@ -131,11 +131,8 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-
-
 router.put('/:id', async (req, res) => {
     const recipe_id = Number(req.params.id);
-
     if (!Number.isInteger(recipe_id)) return return_error_message(res, http_code.bad_request, `parameter id must be an integer, "${req.params.id}" is not`);
 
     const { name, description, dish_type, difficulty_level } = req.body;
@@ -217,8 +214,29 @@ router.put('/:id', async (req, res) => {
     } finally {
         client.release();
     }
+});
 
 
+router.delete("/:id", async (req, res) => {
+    const recipe_id = Number(req.params.id);
+    if (!Number.isInteger(recipe_id)) return return_error_message(res, http_code.bad_request, `parameter id must be an integer, "${req.params.id}" is not`);
+
+    try {
+        const result = await pool.query(
+            'DELETE FROM Recipe WHERE id = $1 RETURNING id',
+            [recipe_id]
+        );
+
+        if (result.rowCount === 0) {
+            return res.status(http_code.not_found).json({ error: `No recipe with id ${recipe_id} to delete` });
+        }
+
+        res.status(http_code.ok).json({ message: `Recipe with ${recipe_id} was deleted` });
+
+    } catch (err) {
+        console.error(err);
+        res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
+    }
 });
 
 

@@ -17,7 +17,7 @@ router.get("/:id", async (req, res) => {
         );
 
         if (result.rows.length === 0) {
-            res.status(404).json({ error: "User not found" });
+            res.status(http_code.not_found).json({ error: "User not found" });
         }
 
         // do something particular if length > 0 ? 
@@ -26,7 +26,7 @@ router.get("/:id", async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
     }
 });
 
@@ -36,7 +36,7 @@ router.post("/register", async (req, res) => {
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
-        return res.status(400).json({ error: 'username, email, and password are required' });
+        return res.status(http_code.bad_request).json({ error: 'username, email, and password are required' });
     }
 
     try {
@@ -49,7 +49,7 @@ router.post("/register", async (req, res) => {
             [username, email, hashedPassword]
         );
 
-        res.status(201).json({ user: result.rows[0] });
+        res.status(http_code.created).json({ user: result.rows[0] });
     } catch (err) {
 
         if (err.code === pg_errors.unique_constraint_violation) {
@@ -94,8 +94,6 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-
-
 router.delete("/:id", async (req, res) => {
     const { id } = req.params;
 
@@ -109,12 +107,12 @@ router.delete("/:id", async (req, res) => {
             return res.status(http_code.not_found).json({ error: 'User not found' });
         }
 
-        res.json({ message: `Account with ${id} was deleted` });
+        res.json({ message: `Account with id ${id} was deleted` });
 
     } catch (err) {
 
         console.error(err);
-        res.status(http_code.bad_request).json({ error: 'Internal server error' });
+        res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
     }
 });
 
