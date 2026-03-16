@@ -85,7 +85,7 @@ router.put('/:id', async (req, res) => {
             RETURNING id, username, email, created_at`
         );
 
-        res.status(http_code.ok).json({ user: result.rows[0] });
+        res.status(http_code.created).json({ user: result.rows[0] });
 
     } catch (err) {
         console.error(err);

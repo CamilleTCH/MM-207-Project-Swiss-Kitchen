@@ -18,7 +18,7 @@ export function validate_step_info(step_number, name, estimated_time_in_seconds)
     if (!Number.isInteger(step_number) || !Number.isInteger(estimated_time_in_seconds) ||
      step_number < 1 || estimated_time_in_seconds < 1){
         console.error("step_number and estimated_time_in_seconds must be strictly positive integers.")
-        return {valid: false, message: "step_number and estimated_time_in_seconds must be strictly positive integeres."}
+        return {valid: false, message: "step_number and estimated_time_in_seconds must be strictly positive integers."}
     }
 
     return {valid: true, message: ""}
