@@ -72,13 +72,29 @@ router.post('/', async (req, res) => {
         
         console.error("Error during recipe creation" , err);
 
-        res.status(500).json({ error: err.message || 'Internal server error' });
+        res.status(http_code.internal_server_error).json({ error: err.message || 'Internal server error' });
     } finally {
         client.release();
     }
-
 });
 
+router.get('/', async (req, res) => {
+    console.log("IN GET ALL");
+
+    try {
+        const result = await pool.query(
+            `SELECT r.name, u.username AS creator_username, r.description, r.dish_type, r.difficulty_level
+            FROM Recipe AS r
+            JOIN SK_User AS u ON r.creator_user_id = u.id
+            ;`
+        );
+
+        res.status(http_code.ok).json({ recipes : result.rows, message: "Here are the recipes"});
+    } catch(err) {
+        res.status(http_code.internal_server_error).json({ error: err.message || 'Internal server error' });
+        return;
+    }
+});
 
 
 export default router;
