@@ -12,7 +12,10 @@ async function post(url, data, contentType = HTTP.contentTypes.application.json)
 
 
 async function runRequest(method, url, data, contentType) {
-    // if (debugMode) console.log(`Sending request ${url}, with data ${data}`);
+    if (debugMode){
+        console.log(`Sending request ${url}, with data`);
+        console.log(data);
+    } 
     const headers = {
         method,
         headers: {
@@ -27,8 +30,8 @@ async function runRequest(method, url, data, contentType) {
     let response = await fetch(url, headers);
 
     if (debugMode) {
-        // console.log("Request response");
-        // console.log(response);
+        console.log("Request response");
+        console.log(response);
     }
 
     if (contentType == HTTP.contentTypes.application.json) {

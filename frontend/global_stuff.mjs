@@ -16,7 +16,7 @@ const SESSION_KEY = "sk_user";
 
 const loggedIn = false;
 
-export function isLoggedIn(){
+export function isLoggedIn() {
     return loggedIn;
 }
 

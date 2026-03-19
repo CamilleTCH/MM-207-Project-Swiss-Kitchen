@@ -20,6 +20,7 @@ function createRouter(){
     }
 
     function navigate(destination){
+        console.log(`NAVIGATING TO : ${destination}`);
         window.location.hash = destination;
     }
 

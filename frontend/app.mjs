@@ -5,6 +5,7 @@ import browseController from "./controller/browseController.mjs";
 import navController from "./controller/navController.mjs";
 import errorController from "./controller/errorController.mjs";
 import registerController from "./controller/registerController.mjs";
+import loginController from "./controller/loginController.mjs";
 
 const app = document.getElementById("app");
 
@@ -19,6 +20,10 @@ router.on("browse", () => {
 
 router.on("recipe", (recipeId) => {
     recipeController(app, recipeId);
+});
+
+router.on("login", () => {
+    loginController(app);
 });
 
 router.on("register", () => {
