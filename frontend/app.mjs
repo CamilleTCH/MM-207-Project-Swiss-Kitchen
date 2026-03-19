@@ -2,6 +2,9 @@ import router from "./modules/router.mjs";
 import homeController from "./controller/homeController.mjs";
 import recipeController from "./controller/recipeController.mjs";
 import browseController from "./controller/browseController.mjs";
+import navController from "./controller/navController.mjs";
+import errorController from "./controller/errorController.mjs";
+import registerController from "./controller/registerController.mjs";
 
 const app = document.getElementById("app");
 
@@ -18,12 +21,13 @@ router.on("recipe", (recipeId) => {
     recipeController(app, recipeId);
 });
 
+router.on("register", () => {
+    registerController(app);
+});
 
 router.on("not-found", () => {
     errorController(app, "404", "Page not found.")
 })
 
-
-console.log("Script loaded.");
-
+navController();
 router.start();
