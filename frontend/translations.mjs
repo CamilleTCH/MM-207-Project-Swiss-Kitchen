@@ -33,26 +33,19 @@ export const recipePageTranslations = {
   stepsH2: {
     [languages.en]: "Steps: ",
     [languages.fr]: "Étapes: "
+  },
+
+  noStepDescription: {
+    [languages.en]: "No description",
+    [languages.fr]: "Aucune description"
   }
 }
 
 
 
 export const errorTranslations = {
-  typeText: {
-    [languages.en]: "Type: ",
-    [languages.fr]: "Type: "
-  },
-  difficultyText: {
-    [languages.en]: "Difficulty: ",
-    [languages.fr]: "Difficulté: "
-  },
-  byText: {
-    [languages.en]: "By: ",
-    [languages.fr]: "Par: "
-  },
-  stepsH2: {
-    [languages.en]: "Steps: ",
-    [languages.fr]: "Étapes: "
+  backHomeButton: {
+    [languages.en]: "← Back to home",
+    [languages.fr]: "← Retour à l'accueil"
   }
 }

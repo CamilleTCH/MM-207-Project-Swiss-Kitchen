@@ -1,6 +1,6 @@
 import loadView from "../modules/viewLoader.mjs";
 
-import { current_language } from "../global_stuff.mjs";
+import { currentLanguage } from "../global_stuff.mjs";
 import { homePageTranslations } from "../translations.mjs";
 
 function homeController(targetApp) {
@@ -16,9 +16,9 @@ async function render(targetApp){
 }
 
 async function fillTranslations(){
-    document.getElementById("home-title").textContent = homePageTranslations.homeTitle[current_language];
-    document.getElementById("home-text-1").textContent = homePageTranslations.homeText1[current_language];
-    document.getElementById("home-text-2").textContent = homePageTranslations.homeText2[current_language];
+    document.getElementById("home-title").textContent = homePageTranslations.homeTitle[currentLanguage];
+    document.getElementById("home-text-1").textContent = homePageTranslations.homeText1[currentLanguage];
+    document.getElementById("home-text-2").textContent = homePageTranslations.homeText2[currentLanguage];
 }
 
 export default homeController;

@@ -3,7 +3,7 @@ export const languages = {
     fr: "fr"
 }
 
-export const current_language = languages.fr;
+export const currentLanguage = languages.fr;
 
 export const hashs = {
     home: "home"
