@@ -35,13 +35,27 @@ export const recipePageTranslations = {
     [languages.fr]: "Étapes: "
   },
 
+  noRecipeDescription: {
+    [languages.en]: "No description",
+    [languages.fr]: "Aucune description"
+  },
+
   noStepDescription: {
     [languages.en]: "No description",
     [languages.fr]: "Aucune description"
   }
 }
 
-
+export const browsePageTranslations = {
+  noRecipeDescription: {
+    [languages.en]: "No description",
+    [languages.fr]: "Aucune description"
+  },
+  byText: {
+    [languages.en]: "By: ",
+    [languages.fr]: "Par: "
+  },
+}
 
 export const errorTranslations = {
   backHomeButton: {
