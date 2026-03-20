@@ -1,14 +1,5 @@
 import HTTP from "./http.mjs";
-import { debugMode } from "../global_stuff.mjs";
-
-async function get(url, contentType = HTTP.contentTypes.application.json) {
-    return await runRequest(HTTP.methods.GET, url, null, contentType);
-}
-
-
-async function post(url, data, contentType = HTTP.contentTypes.application.json) {
-    return await runRequest(HTTP.methods.POST, url, data, contentType);
-}
+import { debugMode, getJwtToken } from "../global_stuff.mjs";
 
 
 async function runRequest(method, url, data, contentType) {
@@ -22,6 +13,9 @@ async function runRequest(method, url, data, contentType) {
             'Content-Type': contentType,
         }
     };
+
+    const jwtToken = getJwtToken();
+    if (jwtToken) headers.headers["Authorization"] = `Bearer ${jwtToken}`;
 
     if (data) {
         headers.body = JSON.stringify(data);
@@ -47,4 +41,25 @@ async function runRequest(method, url, data, contentType) {
 
 }
 
-export { get, post }
+
+async function get(url, contentType = HTTP.contentTypes.application.json) {
+    return await runRequest(HTTP.methods.GET, url, null, contentType);
+}
+
+
+async function post(url, data, contentType = HTTP.contentTypes.application.json) {
+    return await runRequest(HTTP.methods.POST, url, data, contentType);
+}
+
+
+async function put(url, data, contentType = HTTP.contentTypes.application.json) {
+    return await runRequest(HTTP.methods.PUT, url, data, contentType);
+}
+
+async function delete_(url) {
+    return await runRequest(HTTP.methods.DELETE, url);
+}
+
+
+
+export { get, post, put, delete_ }

@@ -9,17 +9,18 @@ function navController() {
 }
 
 async function render() {
-    const view = await loadView("navView");
+    const navView = await loadView("navView");
     const nav = find("#nav-container");
     nav.innerHTML = "";
-    nav.appendChild(document.importNode(view.content, true));
+    nav.appendChild(document.importNode(navView.content, true));
 
     const slot = find("#nav-user-slot", nav);
 
     if (isLoggedIn()) {
         slot.innerHTML = `<a href="#user">My account</a>`;
     } else {
-        slot.innerHTML = `<a href="#login">Login</a><a href="#register">Register</a>`;
+        slot.innerHTML = `<a href="#login">Login</a>
+                            <a href="#register">Register</a>`;
     }
 }
 

@@ -3,6 +3,9 @@ import pool from '../db_interaction.mjs';
 import { http_code, pg_errors } from '../global_stuff.mjs';
 import { return_error_message } from '../utils.mjs';
 
+import hasAuthenticateToken from "../middleware/auth.mjs";
+import requireBody from '../middleware/requireBpdy.mjs';
+
 import { validate_difficulty_level, validate_dish_type, validate_step_info } from '../entry_validations.mjs';
 
 const router = express.Router();
@@ -21,11 +24,7 @@ function validateStepList(steps, res){
 }
 
 
-router.post('/', async (req, res) => {
-    if (!req.body) {
-        return res.status(http_code.bad_request).json({ error: "Need appropriate body" });  // TODO Explain more ? + is this really needed ?
-    }
-
+router.post('/', requireBody("Need appropriate body with recipe information, and authentication token."), hasAuthenticateToken, async (req, res) => {
     const { name, creator_user_id, description, dish_type, difficulty_level } = req.body;
     let steps = req.body.steps;
 
@@ -136,7 +135,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireBody("Need appropriate body with recipe information to update.") ,hasAuthenticateToken, async (req, res) => {
     const recipe_id = Number(req.params.id);
     if (!Number.isInteger(recipe_id)) return return_error_message(res, http_code.bad_request, `parameter id must be an integer, "${req.params.id}" is not`);
 
@@ -160,14 +159,14 @@ router.put('/:id', async (req, res) => {
     if (steps !== undefined) {
         if (!Array.isArray(steps)) { return return_error_message(res, http_code.bad_request, "if existing, argument steps must be an array containing json of steps"); }
     } else {
-        steps = []  // to avoid having to verify the condition multiple times later
+        steps = [];  // to avoid having to verify the condition multiple times later
     }
 
     if (text_fields.length === 0 && steps.length === 0) {
         return res.status(http_code.bad_request).json({ error: 'No fields to update' });
     }
 
-    if (!validate_steps(steps, res)) return;
+    if (!validateStepList(steps, res)) return;
 
 
     const client = await pool.connect();
@@ -218,7 +217,7 @@ router.put('/:id', async (req, res) => {
 });
 
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", hasAuthenticateToken, async (req, res) => {
     const recipe_id = Number(req.params.id);
     if (!Number.isInteger(recipe_id)) return return_error_message(res, http_code.bad_request, `parameter id must be an integer, "${req.params.id}" is not`);
 
@@ -241,7 +240,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 
-router.delete("/:id/clearSteps", async (req, res) => {
+router.delete("/:id/clearSteps", hasAuthenticateToken, async (req, res) => {
     const recipe_id = Number(req.params.id);
     if (!Number.isInteger(recipe_id)) return return_error_message(res, http_code.bad_request, `parameter id must be an integer, "${req.params.id}" is not`);
 

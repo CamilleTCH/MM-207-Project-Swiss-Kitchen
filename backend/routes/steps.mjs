@@ -3,13 +3,15 @@ import { http_code, pg_errors } from '../global_stuff.mjs';
 
 import { validate_step_info } from '../entry_validations.mjs';
 import { return_error_message } from '../utils.mjs';
-import pool from '../db_interaction.mjs'
+import pool from '../db_interaction.mjs';
+
+import hasAuthenticateToken from "../middleware/auth.mjs";
 
 const router = express.Router({ mergeParams: true });
 
 
 
-router.post('/', async (req, res) => {
+router.post('/', hasAuthenticateToken, async (req, res) => {
     if (!req.body) {
         return res.status(http_code.bad_request).json({ error: "Need appropriate body" });  // TODO Explain more ?
     }
@@ -46,7 +48,7 @@ router.post('/', async (req, res) => {
 });
 
 
-router.put('/:stepNumber', async (req, res) => {
+router.put('/:stepNumber', hasAuthenticateToken, async (req, res) => {
     if (!req.body) {
         return res.status(http_code.bad_request).json({ error: "Need appropriate body" });  // TODO Explain more ?
     }
@@ -86,7 +88,7 @@ router.put('/:stepNumber', async (req, res) => {
     }
 });
 
-router.delete('/:stepNumber', async (req, res) => {
+router.delete('/:stepNumber', hasAuthenticateToken, async (req, res) => {
     const recipeId = Number(req.params.id);
     if (!Number.isInteger(recipeId)) return return_error_message(res, http_code.bad_request, `parameter recipeId must be an integer, "${req.params.id}" is not`)
     let stepNumber = Number(req.params.stepNumber);

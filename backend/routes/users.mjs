@@ -7,10 +7,13 @@ import jwt from "jsonwebtoken";
 
 import { http_code, pg_errors, userPasswordHashRounds } from '../global_stuff.mjs'
 
+import hasAuthenticateToken from "../middleware/auth.mjs";
+import requireBody from '../middleware/requireBpdy.mjs';
+
 
 const router = express.Router();
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", hasAuthenticateToken, async (req, res) => {    // make this available to only the correct user 
     const { id } = req.params;
 
     try {
@@ -34,7 +37,7 @@ router.get("/:id", async (req, res) => {
 
 
 
-router.post("/register", async (req, res) => {
+router.post("/register", requireBody("Need a body with the fields (username, email, or password) to register."), async (req, res) => {
     const { username, email, password } = req.body;
 
     if (!username || !email || !password) {
@@ -63,7 +66,7 @@ router.post("/register", async (req, res) => {
 });
 
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', requireBody("Need a body with (optionaly) the fields (username, email, or password) to update."), hasAuthenticateToken, async (req, res) => {
     const { id } = req.params;
     const { username, email, password } = req.body;
 
@@ -81,11 +84,15 @@ router.put('/:id', async (req, res) => {
             return res.status(http_code.bad_request).json({ error: 'No fields to update' });
         }
 
-        // TODO this sql statement won't create any error if the id doesn't exist. Is that a problem ? 
         const result = await pool.query(
             `UPDATE SK_User SET ${text_fields.join(', ')} WHERE id = ${id}
             RETURNING id, username, email, created_at`
         );
+
+        if (result.rowCount === 0) {
+            res.status(http_code.not_found).json({ message: "no user with this id" });
+            return;
+        }
 
         res.status(http_code.created).json({ user: result.rows[0] });
 
@@ -96,8 +103,15 @@ router.put('/:id', async (req, res) => {
 });
 
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", hasAuthenticateToken, async (req, res) => {
     const { id } = req.params;
+
+    console.log("ON A");
+    console.log(req.user.id);
+
+    if (req.user.id !== parseInt(id)) {
+        return res.status(403).json({ error: "You can only delete your own account" })
+    }
 
     try {
         const result = await pool.query(
@@ -118,10 +132,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 
-router.post("/login", async (req, res) => {
-    if (!req.body) {
-        return res.status(http_code.bad_request).json({ error: "Need a body with email and password" });  // TODO Explain more ?
-    }
+router.post("/login", requireBody("Need a body with email and password."), async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {

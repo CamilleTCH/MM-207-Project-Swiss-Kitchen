@@ -6,6 +6,7 @@ import navController from "./controller/navController.mjs";
 import errorController from "./controller/errorController.mjs";
 import registerController from "./controller/registerController.mjs";
 import loginController from "./controller/loginController.mjs";
+import userController from "./controller/userController.mjs";
 
 const app = document.getElementById("app");
 
@@ -30,7 +31,12 @@ router.on("register", () => {
     registerController(app);
 });
 
+router.on("user", () => {
+    userController(app);
+});
+
 router.on("not-found", () => {
+    
     errorController(app, "404", "Page not found.")
 })
 

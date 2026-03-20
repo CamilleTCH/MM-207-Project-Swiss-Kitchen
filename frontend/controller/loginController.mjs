@@ -1,5 +1,5 @@
 import loadView from "../modules/viewLoader.mjs";
-import { getUser, setUser } from "../global_stuff.mjs";
+import { setUser } from "../global_stuff.mjs";
 import router from "../modules/router.mjs";
 import { post } from "../modules/fetchManager.mjs";
 import find from "../modules/findElement.mjs";
@@ -24,7 +24,7 @@ async function render(targetApp) {
 
         try {
             const data = await post("./api/users/login", { email, password });
-            setUser(data.user);
+            setUser(data.user, data.token);
             window.dispatchEvent(new CustomEvent("session-changed"));
             router.navigate("home");
         } catch (err) {
