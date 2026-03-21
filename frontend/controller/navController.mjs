@@ -17,10 +17,15 @@ async function render() {
     const slot = find("#nav-user-slot", nav);
 
     if (isLoggedIn()) {
-        slot.innerHTML = `<a href="#user">My account</a>`;
+        slot.innerHTML = `
+        <a href="#user">My account</a>
+        <a href="#my-recipes">My Recipes</a>
+        `;
     } else {
-        slot.innerHTML = `<a href="#login">Login</a>
-                            <a href="#register">Register</a>`;
+        slot.innerHTML = `
+        <a href="#login">Login</a>
+        <a href="#register">Register</a>
+        `;
     }
 }
 

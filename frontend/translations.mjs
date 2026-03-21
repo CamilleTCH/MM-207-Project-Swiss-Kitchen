@@ -63,3 +63,12 @@ export const errorTranslations = {
     [languages.fr]: "← Retour à l'accueil"
   }
 }
+
+
+
+export const myRecipePageTranslations = {
+  noRecipeDescription: {
+    [languages.en]: "No description",
+    [languages.fr]: "Aucune description"
+  },
+}
