@@ -8,6 +8,7 @@ import registerController from "./controller/registerController.mjs";
 import loginController from "./controller/loginController.mjs";
 import userController from "./controller/userController.mjs";
 import myRecipesController from "./controller/myRecipesController.mjs";
+import editRecipeController from "./controller/editRecipeController.mjs";
 
 const app = document.getElementById("app");
 
@@ -41,8 +42,13 @@ router.on("my-recipes", () => {
     myRecipesController(app);
 });
 
+
+router.on("edit-recipe", (id) => {
+    editRecipeController(app, id);
+});
+
 router.on("not-found", () => {
-    
+
     errorController(app, "404", "Page not found.")
 })
 

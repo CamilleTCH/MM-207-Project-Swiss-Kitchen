@@ -4,9 +4,9 @@ import loadView from "../modules/viewLoader.mjs";
 import { currentLanguage as cL } from "../global_stuff.mjs";
 import { myRecipePageTranslations as mRPT } from "../translations.mjs";
 
-import { get } from "../modules/fetchManager.mjs";
-
-import find from "../modules/findElement.mjs"
+import { get, delete_ } from "../modules/fetchManager.mjs";
+import find from "../modules/findElement.mjs";
+import router from "../modules/router.mjs";
 
 const myRecipeItemTemplate = await loadView("myRecipeItemView");
 
@@ -33,10 +33,8 @@ async function render(targetApp) {
         const data = await get("./api/recipes");
         const myRecipes = data.recipes.filter(r => r.creator_user_id === user.id);
         const listElement = find("#my-recipe-list");
-        console.log("LA LONGUEUR");
-        console.log(listElement);
-        if (myRecipes.length === 0) {
 
+        if (myRecipes.length === 0) {
             listElement.innerHTML = "<li>You have no recipes yet.</li>";
             return;
         }
@@ -44,21 +42,35 @@ async function render(targetApp) {
         for (const recipe of myRecipes) {
             const recipeItem = document.importNode(myRecipeItemTemplate.content, true);
 
-            find("#recipe-name", item).textContent = recipe.name;
-            find("#recipe-description", item).textContent = recipe.description ?? `${mRPT.noRecipeDescription[cL]}`;
-            find("#recipe-type", item).textContent = recipe.dish_type;
-            find("#recipe-difficulty", item).textContent = recipe.difficulty_level;
+            find("#recipe-name", recipeItem).textContent = recipe.name;
+            find("#recipe-description", recipeItem).textContent = recipe.description ?? `${mRPT.noRecipeDescription[cL]}`;
+            find("#recipe-type", recipeItem).textContent = recipe.dish_type;
+            find("#recipe-difficulty", recipeItem).textContent = recipe.difficulty_level;
 
-            find("#edit-button", item).addEventListener("click", () => {
-                router.navigate(`edit-recipe/${recipe.id}`)
+            find("#edit-button", recipeItem).addEventListener("click", () => {
+                router.navigate(`edit-recipe/${recipe.id}`);
             });
 
+            find("#delete-button", recipeItem).addEventListener("click", async () => {
+                const confirmed = window.confirm(
+                    `Delete "${recipe.name}"? This cannot be undone.`
+                );
+                if (!confirmed) return;
+
+                try {
+                    await delete_(`./api/recipes/${recipe.id}`);
+                    render(targetApp);
+                } catch (err) {
+                    console.log("Erreur d'effacement");
+                    console.log(err);
+                }
+            });
 
             listElement.appendChild(recipeItem);
         }
-        
 
-    } catch(err) {
+
+    } catch (err) {
         console.log("Erreur");
         console.log(err);
     }

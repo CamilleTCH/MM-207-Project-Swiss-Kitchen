@@ -3,8 +3,6 @@ import { http_code } from "../global_stuff.mjs";
 
 function hasAuthenticateToken(req, res, next) {
     const authHeader = req.headers["authorization"];
-    console.log("ON A DONC");
-    console.log(authHeader);
     const token = authHeader && authHeader.split(" ")[1]
 
     if (!token) {

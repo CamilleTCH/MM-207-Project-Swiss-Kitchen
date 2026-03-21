@@ -91,7 +91,7 @@ router.post('/', requireBody("Need appropriate body with recipe information, and
 router.get('/', async (req, res) => {
     try {
         const result = await pool.query(
-            `SELECT r.id, r.name, u.username AS creator_username, r.description, r.dish_type, r.difficulty_level
+            `SELECT r.id, r.name, u.username AS creator_username, u.id AS creator_user_id, r.description, r.dish_type, r.difficulty_level
             FROM Recipe AS r
             JOIN SK_User AS u ON r.creator_user_id = u.id
             ;`

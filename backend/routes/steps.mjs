@@ -25,7 +25,7 @@ router.post('/', hasAuthenticateToken, async (req, res) => {
 
     try {
         const result = await pool.query(`
-            INSERT INTO Step (related_recipeId, step_number, name, description, estimated_time_in_seconds)
+            INSERT INTO Step (related_recipe_id, step_number, name, description, estimated_time_in_seconds)
             VALUES ($1, $2, $3, $4, $5)
             RETURNING *
             ;`,

@@ -64,11 +64,57 @@ export const errorTranslations = {
   }
 }
 
-
-
 export const myRecipePageTranslations = {
   noRecipeDescription: {
     [languages.en]: "No description",
     [languages.fr]: "Aucune description"
   },
+}
+
+
+export const editRecipePageTranslations = {
+  noRecipeDescription: {
+    [languages.en]: "No description",
+    [languages.fr]: "Aucune description"
+  },
+
+  noStepDescription: {
+    [languages.en]: "No description",
+    [languages.fr]: "Aucune description"
+  },
+}
+
+
+
+
+export const getErrorMessageTranslations = {
+  generic: {
+    [languages.en]: "An error occured",
+    [languages.fr]: "Une erreur est survenue"
+  },
+
+  notFound: {
+    [languages.en]: "The ressource was not found",
+    [languages.fr]: "La ressource n'a pas été trouvée"
+  },
+
+  conflict: {
+    [languages.en]: "Conflict with an existing ressource",
+    [languages.fr]: "Conflict avec une ressource existante"
+  },
+
+  clientError: {
+    [languages.en]: "Your request is not valid",
+    [languages.fr]: "Votre requête n'est pas valable"
+  },
+
+  serverError: {
+    [languages.en]: "An server error occured",
+    [languages.fr]: "Une erreur serveur a eu lieu"
+  },
+
+  unauthorized: {
+    [languages.en]: "No authorization for this",
+    [languages.fr]: "Pas d'authorisation pour faire ça"
+  }
 }

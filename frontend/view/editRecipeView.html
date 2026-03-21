@@ -1,0 +1,33 @@
+<section>
+    <a href="#my-recipes">← Back to my recipes</a>
+    <h1>Edit recipe</h1>
+    <form id="edit-recipe-form">
+        <label for="recipe-name">Name</label>
+        <input type="text" id="recipe-name">
+
+        <label for="recipe-description">Description</label>
+        <textarea id="recipe-description"></textarea>
+
+        <label for="recipe-dish-type">Dish type</label>
+        <select id="recipe-dish-type">
+            <option value="starter">Starter</option>
+            <option value="main_dish">Main dish</option>
+            <option value="dessert">Dessert</option>
+        </select>
+
+        <label for="recipe-difficulty">Difficulty</label>
+        <select id="recipe-difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+
+        <button type="submit">Save changes</button>
+        <p id="edit-error" role="alert" aria-live="polite"></p>
+    </form>
+
+    <h2>Steps</h2>
+    <ol id="steps-container" aria-label="Recipe steps"></ol>
+    <p id="steps-error" role="alert" aria-live="polite"></p>
+    <button id="add-step-button">+ Add a step</button>
+</section>
