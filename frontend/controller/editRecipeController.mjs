@@ -8,11 +8,12 @@ import { editRecipePageTranslations as eDRPT } from "../translations.mjs";
 
 import find from "../modules/findElement.mjs";
 
-import { getErrorMessage } from "../modules/getErrorMessage.mjs";
+import { getErrorMessage } from "../modules/errorRelated.mjs";
 import loadView from "../modules/viewLoader.mjs";
+import HTTP from "../modules/http.mjs";
 
 
-const default_estimated_time_in_seconds = 60;
+const defaultEstimatedTimeInSeconds = 60;
 
 
 function editRecipeController(targetApp, id) {
@@ -48,8 +49,11 @@ async function render(targetApp, id) {
         });
 
     } catch (err) {
+        if (err.status === HTTP.clientErrorCodes.UNAUTHORIZED) {
+                handleUnauthorized();
+                return;
+            }
         targetApp.textContent = getErrorMessage(err);
-        console.log(err);
     }
 }
 
@@ -63,14 +67,17 @@ async function onAddStep(recipeId) {
     try {
         await post(`./api/recipes/${recipeId}/steps`, {
             name: `Step ${nextStepNumber}`,
-            estimated_time_in_seconds: default_estimated_time_in_seconds,
+            estimated_time_in_seconds: defaultEstimatedTimeInSeconds,
             step_number: nextStepNumber
         });
         const updatedListOfSteps = await get(`./api/recipes/${recipeId}`);
         renderSteps(updatedListOfSteps.recipe.steps, recipeId);
     } catch (err) {
+        if (err.status === HTTP.clientErrorCodes.UNAUTHORIZED) {
+                handleUnauthorized();
+                return;
+            }
         errorEl.textContent = getErrorMessage(err);
-        console.log(err);
     }
 }
 
@@ -90,11 +97,13 @@ async function onEditRecipe(recipeId) {
         await put(`./api/recipes/${recipeId}`, body);
         router.navigate("my-recipes");
     } catch (err) {
+        if (err.status === HTTP.clientErrorCodes.UNAUTHORIZED) {
+                handleUnauthorized();
+                return;
+            }
         errorEl.textContent = getErrorMessage(err);
-        console.log(err);
     }
 }
-
 
 
 function renderSteps(steps, recipeId) {
@@ -130,7 +139,6 @@ function renderSteps(steps, recipeId) {
                 successEl.textContent = "Saved.";
             } catch (err) {
                 errorEl.textContent = getErrorMessage(err);
-                console.log(err);
             }
         });
 
@@ -145,13 +153,10 @@ function renderSteps(steps, recipeId) {
                 renderSteps(updated.recipe.steps, recipeId);
             } catch (err) {
                 errorEl.textContent = getErrorMessage(err);
-                console.log(err);
             }
         });
         stepsContainer.appendChild(li);
     }
 }
-
-
 
 export default editRecipeController;

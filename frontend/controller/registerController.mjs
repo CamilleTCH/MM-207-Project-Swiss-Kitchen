@@ -5,6 +5,8 @@ import loadView from "../modules/viewLoader.mjs";
 
 import router from "../modules/router.mjs";
 
+import { getErrorMessage } from "../modules/errorRelated.mjs";
+
 function registerController(targetApp) {
     render(targetApp);
 }
@@ -15,7 +17,7 @@ async function render(targetApp){
     targetApp.appendChild(document.importNode(registerView.content, true));
 
     find("#register-form").addEventListener("submit", async (e) => {
-        e.preventDefault();     // otherwise page will reload
+        e.preventDefault();     // otherwise page will reload, we don't want that
         const username = find("#register-username").value;
         const email = find("#register-email").value;
         const password = find("#register-password").value;
@@ -29,9 +31,7 @@ async function render(targetApp){
             router.navigate("home");
             
         } catch(err){
-            console.log("Error in register");
-            console.log(err);
-            // catch le fait que le user existe déjà
+            errorEl.textContent = getErrorMessage(err);
         }
     });
 }

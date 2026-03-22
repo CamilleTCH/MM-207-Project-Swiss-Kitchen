@@ -9,6 +9,7 @@ import loginController from "./controller/loginController.mjs";
 import userController from "./controller/userController.mjs";
 import myRecipesController from "./controller/myRecipesController.mjs";
 import editRecipeController from "./controller/editRecipeController.mjs";
+import createRecipeController from "./controller/createRecipeController.mjs";
 
 const app = document.getElementById("app");
 
@@ -46,6 +47,12 @@ router.on("my-recipes", () => {
 router.on("edit-recipe", (id) => {
     editRecipeController(app, id);
 });
+
+
+router.on("create-recipe", () => {
+    createRecipeController(app);
+});
+
 
 router.on("not-found", () => {
 

@@ -38,14 +38,13 @@ router.post('/', requireBody("Need appropriate body with recipe information, and
     if (steps !== undefined) {
         if (!Array.isArray(steps)) { return return_error_message(res, http_code.bad_request, "if existing, argument steps must be an array containing json of steps"); }
     } else {
-        steps = []  // to avoid having to verify the condition multiple times later
+        steps = [];  // to avoid having to verify the condition multiple times later
     }
 
     if (!validateStepList(steps, res)) return;
 
     const client = await pool.connect();
     try {
-        // Insert the recipe
         await client.query("BEGIN");
 
         const recipeResult = await client.query(
@@ -58,7 +57,6 @@ router.post('/', requireBody("Need appropriate body with recipe information, and
 
         const insertedSteps = [];
 
-        // // Insert the steps
         for (let i = 0; i < steps.length; i++) {
             const { name, step_number, description, estimated_time_in_seconds } = steps[i];
             const stepResult = await client.query(

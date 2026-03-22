@@ -106,11 +106,8 @@ router.put('/:id', requireBody("Need a body with (optionaly) the fields (usernam
 router.delete("/:id", hasAuthenticateToken, async (req, res) => {
     const { id } = req.params;
 
-    console.log("ON A");
-    console.log(req.user.id);
-
     if (req.user.id !== parseInt(id)) {
-        return res.status(403).json({ error: "You can only delete your own account" })
+        return res.status(http_code.forbidden).json({ error: "You can only delete your own account" })
     }
 
     try {
@@ -148,7 +145,7 @@ router.post("/login", requireBody("Need a body with email and password."), async
         const user = result.rows[0];
 
         if (!user || !(await bcrypt.compare(password, user.password))) {
-            return res.status(http_code.unauthorized).json({ error: "Invalid email or password" });
+            return res.status(http_code.forbidden).json({ error: "Invalid email or password" });
         }
 
         const token = jwt.sign(

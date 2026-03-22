@@ -6,6 +6,8 @@ import find from "../modules/findElement.mjs";
 import { currentLanguage as cL} from "../global_stuff.mjs";
 import { browsePageTranslations as bPT } from "../translations.mjs";
 
+import { getErrorMessage } from "../modules/errorRelated.mjs";
+
 const recipeCardTemplate = await loadView("recipeCardView");
 
 function browseController(targetApp) {
@@ -13,7 +15,6 @@ function browseController(targetApp) {
 }
 
 async function render(targetApp) {
-    console.log("RENDER");
     const browseView = await loadView("browseView");
     targetApp.innerHTML = "";
     targetApp.appendChild(document.importNode(browseView.content, true));
@@ -21,10 +22,6 @@ async function render(targetApp) {
     try {
         const data = await get("./api/recipes");
         const recipeList = find("#recipe-list");
-        console.log("DATA");
-        console.log(data);
-
-        // TODO, add sorting options if enough time
 
         for (const recipe of data.recipes) {
             const recipeItem = document.importNode(recipeCardTemplate.content, true);
@@ -43,9 +40,7 @@ async function render(targetApp) {
         }
 
     } catch (err) {
-        // TODO
-        console.log("Errur");
-        console.log(err);
+        find("#recipe-list").textContent = getErrorMessage(err);
     }
 }
 

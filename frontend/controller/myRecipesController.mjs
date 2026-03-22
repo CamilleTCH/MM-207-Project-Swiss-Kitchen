@@ -8,6 +8,10 @@ import { get, delete_ } from "../modules/fetchManager.mjs";
 import find from "../modules/findElement.mjs";
 import router from "../modules/router.mjs";
 
+import { getErrorMessage, handleUnauthorized } from "../modules/errorRelated.mjs";
+import HTTP from "../modules/http.mjs";
+
+
 const myRecipeItemTemplate = await loadView("myRecipeItemView");
 
 
@@ -22,8 +26,7 @@ function myRecipesController(targetApp) {
 
 async function render(targetApp) {
     const myRecipesView = await loadView("myRecipesView");
-    console.log("ON A LOAD");
-    console.log(myRecipesView.content);
+
     targetApp.innerHTML = "";
     targetApp.appendChild(document.importNode(myRecipesView.content, true));
 
@@ -61,18 +64,19 @@ async function render(targetApp) {
                     await delete_(`./api/recipes/${recipe.id}`);
                     render(targetApp);
                 } catch (err) {
-                    console.log("Erreur d'effacement");
-                    console.log(err);
+                    getErrorMessage(err);
                 }
             });
 
             listElement.appendChild(recipeItem);
         }
 
-
     } catch (err) {
-        console.log("Erreur");
-        console.log(err);
+        if (err.status === HTTP.clientErrorCodes.UNAUTHORIZED) {
+            handleUnauthorized();
+            return;
+        }
+        getErrorMessage(err);
     }
 }
 

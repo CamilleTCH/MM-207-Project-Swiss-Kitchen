@@ -3,6 +3,8 @@ import { getUser } from "../global_stuff.mjs";
 import loadView from "../modules/viewLoader.mjs";
 import UserPanel from "../user-panel.mjs";
 
+import router from "../modules/router.mjs";
+
 customElements.define("user-panel", UserPanel);
 
 function userController(targetApp) {
@@ -11,13 +13,11 @@ function userController(targetApp) {
 
 
 async function render(targetApp) {
-    console.log("DANS USER RENDER");
     if (!getUser()) {
         router.navigate("login");
         return;
     }
 
-    console.log("Il y a un user");
     const userView = await loadView("userView");
     targetApp.innerHTML = "";
     targetApp.appendChild(document.importNode(userView.content, true));

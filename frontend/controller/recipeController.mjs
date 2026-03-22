@@ -7,7 +7,7 @@ import find  from "../modules/findElement.mjs"
 import { currentLanguage as cL } from "../global_stuff.mjs";
 import { recipePageTranslations as rPT } from "../translations.mjs";
 
-const stepTemplate = await loadView("recipeStepView");  // TODO do the same with the recipeView 
+const stepTemplate = await loadView("recipeStepView");
 
 
 function recipeController(targetApp, recipeId) {
@@ -15,8 +15,6 @@ function recipeController(targetApp, recipeId) {
 }
 
 async function render(targetApp, recipeId) {
-    console.log("Recipe id");
-    console.log(recipeId);
     const recipeView = await loadView("recipeView");
     targetApp.innerHTML = "";
     targetApp.appendChild(document.importNode(recipeView.content, true));
@@ -34,6 +32,7 @@ async function render(targetApp, recipeId) {
         const stepList = find("#step-list");
 
         recipe.steps.sort((a, b) => a.step_number - b.step_number);
+
         for (const step of recipe.steps){
             
             const stepItem = document.importNode(stepTemplate.content, true);
@@ -42,16 +41,16 @@ async function render(targetApp, recipeId) {
 
             find("#step-name", stepItem).textContent = `Step #${step.step_number} - ${step.name}`;
             find("#step-description", stepItem).textContent = `${step.description || rPT.noStepDescription[cL]}`;
-            find("#step-duration", stepItem).textContent = `${minutes}m ${seconds}s`;   // TODO add localization format ?
+            find("#step-duration", stepItem).textContent = `${minutes}m ${seconds}s`;
 
             stepList.appendChild(stepItem);
         }
     
     } catch (err){
-        if (err.status === 404){
+        if (err.status === HTTP.clientErrorCodes.NOT_FOUND){
             errorController(targetApp, HTTP.clientErrorCodes.NOT_FOUND, "The page your looking for is in another bank.");
         } else {
-            errorController(targetApp, err.status, "OH. Unexpected error. Check your console.");
+            errorController(targetApp, err.status, "Unexpected error. Check your console.");
         }
         
         console.log(err);

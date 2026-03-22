@@ -11,8 +11,8 @@ const successCodes = {
 }
 
 const clientErrorCodes = {
-    UNAUTHORIZED: '401',
-    NOT_FOUND: '404'
+    UNAUTHORIZED: 401,
+    NOT_FOUND: 404
 }
 
 const serverErrorCodes = {

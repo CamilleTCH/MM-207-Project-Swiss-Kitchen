@@ -3,6 +3,8 @@ import { delete_, put } from "./modules/fetchManager.mjs";
 
 import router from './modules/router.mjs';
 
+import { getErrorMessage } from "./modules/errorRelated.mjs";
+import HTTP from "../modules/http.mjs";
 
 
 class UserPanel extends HTMLElement {
@@ -11,7 +13,6 @@ class UserPanel extends HTMLElement {
     }
 
     render() {
-        console.log("RENDERING");
         const user = getUser();
         if (!user) return;
 
@@ -79,8 +80,6 @@ class UserPanel extends HTMLElement {
 
         try {
             const data = await put(`./api/users/${user.id}`, body);
-            console.log("J'AI EU COMME DATA");
-            console.log(data);
             const updatedUser = { ...data.user };
 
             setUser(updatedUser, getJwtToken());
@@ -89,8 +88,11 @@ class UserPanel extends HTMLElement {
             this.querySelector("#email").textContent = updatedUser.email;
 
         } catch (err) {
-            console.log("Erreur");
-            console.log(err);
+            if (err.status === HTTP.clientErrorCodes.UNAUTHORIZED) {
+                handleUnauthorized();
+                return;
+            }
+            errorEl.textContent = getErrorMessage(err);
         }
     }
 
@@ -109,12 +111,14 @@ class UserPanel extends HTMLElement {
             window.dispatchEvent(new CustomEvent("session-changed"));
             router.navigate("home");
         } catch (err) {
-            console.log("Erreur");
-            console.log(err);
+            if (err.status === HTTP.clientErrorCodes.UNAUTHORIZED) {
+                handleUnauthorized();
+                return;
+            }
+            errorEl.textContent = getErrorMessage(err);
         }
     }
 }
-
 
 
 export default UserPanel;
