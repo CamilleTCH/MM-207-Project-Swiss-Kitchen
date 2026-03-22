@@ -11,6 +11,10 @@ import myRecipesController from "./controller/myRecipesController.mjs";
 import editRecipeController from "./controller/editRecipeController.mjs";
 import createRecipeController from "./controller/createRecipeController.mjs";
 
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.mjs")
+}
+
 const app = document.getElementById("app");
 
 
@@ -60,4 +64,5 @@ router.on("not-found", () => {
 })
 
 navController();
+
 router.start();
