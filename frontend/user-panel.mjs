@@ -3,8 +3,8 @@ import { delete_, put } from "./modules/fetchManager.mjs";
 
 import router from './modules/router.mjs';
 
-import { getErrorMessage } from "./modules/errorRelated.mjs";
-import HTTP from "../modules/http.mjs";
+import { getErrorMessage, handleUnauthorized } from "./modules/errorRelated.mjs";
+import HTTP from "./modules/http.mjs";
 
 
 class UserPanel extends HTMLElement {

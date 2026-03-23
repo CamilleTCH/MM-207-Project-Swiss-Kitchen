@@ -1,5 +1,5 @@
 import router from "../modules/router.mjs";
-import { getErrorMessage } from "../modules/errorRelated.mjs";
+import { getErrorMessage, handleUnauthorized } from "../modules/errorRelated.mjs";
 
 import { post } from "../modules/fetchManager.mjs";
 import loadView from "../modules/viewLoader.mjs";

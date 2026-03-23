@@ -8,7 +8,7 @@ import { editRecipePageTranslations as eDRPT } from "../translations.mjs";
 
 import find from "../modules/findElement.mjs";
 
-import { getErrorMessage } from "../modules/errorRelated.mjs";
+import { getErrorMessage, handleUnauthorized } from "../modules/errorRelated.mjs";
 import loadView from "../modules/viewLoader.mjs";
 import HTTP from "../modules/http.mjs";
 
