@@ -36,6 +36,8 @@ async function render(targetApp) {
         const data = await get("./api/recipes");
         const myRecipes = data.recipes.filter(r => r.creator_user_id === user.id);
         const listElement = find("#my-recipe-list");
+        const errorElement = find("my-recipes-error");
+        errorElement.textContent = "";
 
         if (myRecipes.length === 0) {
             listElement.innerHTML = "<li>You have no recipes yet.</li>";
@@ -64,7 +66,7 @@ async function render(targetApp) {
                     await delete_(`./api/recipes/${recipe.id}`);
                     render(targetApp);
                 } catch (err) {
-                    getErrorMessage(err);
+                    errorElement.textContent = getErrorMessage(err);
                 }
             });
 

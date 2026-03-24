@@ -14,7 +14,7 @@ const SHELL_FILES = [
     "./modules/viewLoader.mjs",
     "./modules/findElement.mjs",
     "./modules/router.mjs",
-    "./modules/getErrorMessage.mjs",
+    "./modules/errorRelated.mjs.mjs",
     "./controller/navController.mjs",
     "./controller/homeController.mjs",
     "./controller/browseController.mjs",

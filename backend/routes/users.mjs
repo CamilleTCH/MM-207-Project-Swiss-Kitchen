@@ -23,9 +23,8 @@ router.get("/:id", hasAuthenticateToken, async (req, res) => {    // make this a
 
         if (result.rows.length === 0) {
             res.status(http_code.not_found).json({ error: "User not found" });
+            return;
         }
-
-        // do something particular if length > 0 ? 
 
         res.json({ user: result.rows[0] });
 
@@ -161,7 +160,7 @@ router.post("/login", requireBody("Need a body with email and password."), async
 
     } catch (err) {
         console.error(err);
-        res.status(http_code.bad_request).json({ error: "Internal server error" });
+        res.status(http_code.internal_server_error).json({ error: "Internal server error" });
     }
 });
 

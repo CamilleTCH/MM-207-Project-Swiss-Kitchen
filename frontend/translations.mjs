@@ -118,3 +118,10 @@ export const getErrorMessageTranslations = {
     [languages.fr]: "Pas d'authorisation pour faire ça"
   }
 }
+
+export const loginTranslations = {
+  generic: {
+    [languages.en]: "An error occured",
+    [languages.fr]: "Une erreur est survenue"
+  },
+}

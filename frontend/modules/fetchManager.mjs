@@ -1,7 +1,5 @@
 import HTTP from "./http.mjs";
 import { debugMode, getJwtToken } from "../global_stuff.mjs";
-import router from "./router.mjs";
-import { clearUser } from "../global_stuff.mjs";
 
 
 async function runRequest(method, url, data, contentType) {
@@ -32,12 +30,6 @@ async function runRequest(method, url, data, contentType) {
 
     if (contentType == HTTP.contentTypes.application.json) {
         if (!response.ok) {
-            if (response.status == HTTP.clientErrorCodes.UNAUTHORIZED) {
-                clearUser();
-                window.dispatchEvent(new CustomEvent("session-changed"));
-                router.navigate("login");
-            }
-
             throw { status: response.status, message: response.error }
         }
         response = await response.json();
