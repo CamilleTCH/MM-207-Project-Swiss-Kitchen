@@ -160,7 +160,7 @@ router.post("/login", requireBody("Need a body with email and password."), async
 
     } catch (err) {
         console.error(err);
-        res.status(http_code.bad_request).json({ error: "Internal server error" });
+        res.status(http_code.internal_server_error).json({ error: "Internal server error" });
     }
 });
 

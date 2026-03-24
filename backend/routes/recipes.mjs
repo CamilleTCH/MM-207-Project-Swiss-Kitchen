@@ -110,7 +110,7 @@ router.get("/:id", async (req, res) => {
 
     try {
         const result = await pool.query(
-            `SELECT r.name, u.username AS creator_username, r.description, r.dish_type, r.difficulty_level
+            `SELECT r.name, u.username AS creator_username, u.id AS creator_user_id, r.description, r.dish_type, r.difficulty_level
             FROM Recipe AS r
             JOIN SK_User AS u ON r.creator_user_id = u.id
             WHERE r.id = $1
@@ -169,7 +169,7 @@ router.put('/:id', requireBody("Need appropriate body with recipe information to
 
     const client = await pool.connect();
     try {
-        client.query("BEGIN;");
+        await client.query("BEGIN;");
 
         const recipeResult = await client.query(
             `UPDATE Recipe SET ${text_fields.join(', ')} WHERE id = ${recipe_id}
@@ -182,7 +182,6 @@ router.put('/:id', requireBody("Need appropriate body with recipe information to
         const recipe = recipeResult.rows[0];
 
 
-        // Insert the steps
         for (const step of steps) {
             const { name, step_number, description, estimated_time_in_seconds } = step;
             const stepResult = await client.query(
@@ -245,14 +244,14 @@ router.delete("/:id/clearSteps", hasAuthenticateToken, async (req, res) => {
 
     const client = await pool.connect();
     try {
-        client.query("BEGIN;");
+        await client.query("BEGIN;");
         const result = await client.query(
             'DELETE FROM Step WHERE related_recipe_id = $1 RETURNING related_recipe_id',
             [recipe_id]
         );
 
         if (result.rowCount === 0) {
-            client.query("ROLLBACK;");
+            await client.query("ROLLBACK;");
             return res.status(http_code.not_found).json({ error: `No recipe with id ${recipe_id} to delete the steps of.` });
         }
 
@@ -267,7 +266,7 @@ router.delete("/:id/clearSteps", hasAuthenticateToken, async (req, res) => {
 
         });
     } catch (err) {
-        client.query("ROLLBACK;");
+        await client.query("ROLLBACK;");
         console.error(err);
         res.status(http_code.internal_server_error).json({ error: 'Internal server error' });
     } finally {
