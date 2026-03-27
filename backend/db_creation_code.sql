@@ -50,7 +50,7 @@ INSERT INTO SK_User (id, username, email, password) VALUES (
 
 INSERT INTO Recipe (name, creator_user_id, dish_type, difficulty_level)
 VALUES (
-    'omelette champi',
+    'mushroom omelette',
     (SELECT id FROM SK_User WHERE email = 'rollotomasi@originuser.com'),
     'main_dish',
     'easy'
@@ -58,25 +58,25 @@ VALUES (
 
 INSERT INTO Step (related_recipe_id, step_number, name, description, estimated_time_in_seconds)
 VALUES (
-    (SELECT id FROM Recipe WHERE name = 'omelette champi'),
+    (SELECT id FROM Recipe WHERE name = 'mushroom omelette'),
     1,
-    'Couper les champignons',
-    'Couper chaque champignon à la moitiée, puis en plus petits bouts',
+    'Cut the mushrooms',
+    'Cut each mushroom in half, then into smaller pieces',
     300
 );
 
 INSERT INTO Step (related_recipe_id, step_number, name, description, estimated_time_in_seconds)
 VALUES (
-    (SELECT id FROM Recipe WHERE name = 'omelette champi'),
+    (SELECT id FROM Recipe WHERE name = 'mushroom omelette'),
     2,
-    'Préparer la pâte',
-    'Casser les oeufs dans un saladier. Ajouter 3 cuillères à soupe de lait.',
+    'Prepare the batter',
+    'Crack the eggs into a bowl. Add 3 tablespoons of milk.',
     300
 );
 
 INSERT INTO Recipe (name, creator_user_id, dish_type, difficulty_level)
 VALUES (
-    'Soupe du néant',
+    'Void soup',
     (SELECT id FROM SK_User WHERE email = 'rollotomasi@originuser.com'),
     'main_dish',
     'easy'

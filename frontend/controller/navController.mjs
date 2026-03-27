@@ -29,4 +29,10 @@ async function render() {
     }
 }
 
+
+async function fillLocalTranslations(){
+    document.getElementById("home-a").textContent = homePageTranslations.homeTitle[currentLanguage];
+}
+
+
 export default navController;

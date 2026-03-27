@@ -6,6 +6,9 @@ import router from './modules/router.mjs';
 import { getErrorMessage, handleUnauthorized } from "./modules/errorRelated.mjs";
 import HTTP from "./modules/http.mjs";
 
+import { currentLanguage as cL } from "./global_stuff.mjs";
+import { userPanelTranslations as uPT} from "./translations.mjs";
+
 
 class UserPanel extends HTMLElement {
     connectedCallback() {
@@ -17,23 +20,23 @@ class UserPanel extends HTMLElement {
         if (!user) return;
 
         this.innerHTML = `
-            <p>Username: <strong id="username">${user.username}</strong></p>
-            <p>Email: <strong id="email">${user.email}</strong></p>
-            <h3>Edit account</h3>
+            <p>${uPT.username[cL]}<strong id="username">${user.username}</strong></p>
+            <p>${uPT.email[cL]}<strong id="email">${user.email}</strong></p>
+            <h3>${uPT.editAccount[cL]}</h3>
             <form id="edit-form">
-                <label for="new-username">New username</label>
+                <label for="new-username">${uPT.newUsername[cL]}</label>
                 <input type="text" id="new-username" placeholder="${user.username}">
-                <label for="new-email">New email</label>
+                <label for="new-email">${uPT.newEmail[cL]}</label>
                 <input type="email" id="new-email" placeholder="${user.email}">
-                <label for="new-password">New password</label>
+                <label for="new-password">${uPT.newPassword[cL]}</label>
                 <input type="password" id="new-password">
-                <button type="submit">Save changes</button>
+                <button type="submit">${uPT.saveChanges[cL]}</button>
                 <p id="edit-error" role="alert" aria-live="polite"></p>
                 <p id="edit-success" aria-live="polite"></p>
             </form>
             <hr>
-            <button id="logout-button">Logout</button>
-            <button id="delete-button">Delete my account</button>
+            <button id="logout-button">${uPT.logout[cL]}</button>
+            <button id="delete-button">${uPT.deleteMyAccount[cL]}</button>
             <p id="delete-error" role="alert" aria-live="polite"></p>
         `;
 
@@ -83,7 +86,7 @@ class UserPanel extends HTMLElement {
             const updatedUser = { ...data.user };
 
             setUser(updatedUser, getJwtToken());
-            successEl.textContent = "Account updated successfully.";
+            successEl.textContent = uPT.accountUpdateSuccess[cL];
             this.querySelector("#username").textContent = updatedUser.username;
             this.querySelector("#email").textContent = updatedUser.email;
 
@@ -101,7 +104,7 @@ class UserPanel extends HTMLElement {
         errorEl.textContent = "";
 
         const confirmed = window.confirm(
-            "All your recipes will also be deleted. Are you sure you want to do this?"
+            uPT.confirmDeleteMessage[cL]
         );
         if (!confirmed) return;
 

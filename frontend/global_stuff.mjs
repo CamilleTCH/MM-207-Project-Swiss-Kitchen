@@ -5,7 +5,7 @@ const TOKEN_KEY = "sk_token";
 export function setUser(user, token) {
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(user));
 
-    if (token === undefined) console.log("UNDEFINED TOKEN ATTENTION");
+    if (token === undefined) console.log("UNDEFINED TOKEN");
     sessionStorage.setItem(TOKEN_KEY, token);
 }
 
@@ -28,15 +28,16 @@ export const languages = {
     en: "en",
     fr: "fr"
 }
-export const currentLanguage = languages.fr;
+
+const browserLang = navigator.language.split('-')[0];
+export const currentLanguage =  Object.values(languages).includes(browserLang) ? browserLang : "en";
 
 export const hashs = {
     home: "home"
 }
 
-export const debugMode = true;
+export const debugMode = false;
 
-const loggedIn = false;
 
 export function isLoggedIn() {
     return getUser() !== null;

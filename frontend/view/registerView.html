@@ -1,14 +1,24 @@
 <section>
-    <h1>Create an account</h1>
+    <h1 id="register-title">Create an account</h1>
     <form id="register-form">
-        <label for="register-username">Username</label>
+        <label id="register-username-label" for="register-username">Username</label>
         <input type="text" id="register-username">
-        <label for="register-email">Email</label>
+
+        <label id="register-email-label" for="register-email">Email</label>
         <input type="email" id="register-email">
-        <label for="register-password">Password</label>
+
+        <label id="register-password-label" for="register-password">Password</label>
         <input type="password" id="register-password">
-        <button type="submit">Create account</button>
-        <p id="register-error"></p>
+
+        <div id="register-gdpr-container">
+            <input type="checkbox" id="register-gdpr-checkbox">
+            <label id="register-gdpr-label" for="register-gdpr-checkbox">
+                I accept that my username and email address will be stored to manage my account. I can delete my account anytime using the user page.
+            </label>
+        </div>
+
+        <button id="register-submit-button" type="submit">Create account</button>
+        <p id="register-error" role="alert" aria-live="polite"></p>
     </form>
-    <p>Already have an account? <a href="#login">Login</a></p>
+    <p id="register-already-account-text">Already have an account? <a id="register-login-link" href="#login">Login</a></p>
 </section>

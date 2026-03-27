@@ -19,6 +19,8 @@ async function render(targetApp) {
     targetApp.innerHTML = "";
     targetApp.appendChild(document.importNode(browseView.content, true));
 
+    loadViewTranslations();
+
     try {
         const data = await get("./api/recipes");
         const recipeList = find("#recipe-list");
@@ -42,6 +44,10 @@ async function render(targetApp) {
     } catch (err) {
         find("#recipe-list").textContent = getErrorMessage(err);
     }
+}
+
+async function loadViewTranslations(){
+    document.getElementById("browse-h1").textContent = bPT.browseRecipes[cL];
 }
 
 export default browseController;
