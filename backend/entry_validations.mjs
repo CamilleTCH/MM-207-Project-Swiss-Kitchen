@@ -1,6 +1,3 @@
-// file that contains functions that validates entries (and that are specific to this app)
-
-
 export function validate_difficulty_level(difficulty_level){
     return difficulty_level === "easy" || difficulty_level === "medium" || difficulty_level === "hard";
 }

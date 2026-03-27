@@ -1,202 +1,370 @@
-# API documentation
 
-_inspired by : https://gist.github.com/azagniotov/a4b16faf0febd12efbc6c3d7370383a6_
+# API Documentation
 
-## Recipe related
+Inspired by: https://gist.github.com/azagniotov/a4b16faf0febd12efbc6c3d7370383a6
 
-<details>
- <summary><code>GET</code> <code><b>/recipe/</b></code> <code>(gets all recipes)</code></summary>
+---
 
-##### Parameters
-> None
+# Authentication
 
-##### Responses
-> | http code | description of answer                  | response |
-> | --------- | -------------------------------------- | -------- |
-> | `200`     | `All available recipe in the database` | string   |
+This API uses JWT authentication.
 
-</details>
+Protected routes require the following header:
 
-<!-------------------------------------------------------------------------->
+Authorization: Bearer <token>
 
-<details>
- <summary><code>GET</code> <code><b>/recipe/{recipe_id}</b></code> <code>(gets one recipe)</code></summary>
+### Possible errors
 
-##### Parameters
-> | name        | type     | data type | where | description             |
-> | ----------- | -------- | --------- | ----- | ----------------------- |
-> | `recipe_id` | required | int       | url   | id of the recipe to get |
+| HTTP Code | Description              |
+|----------|--------------------------|
+| 401      | Unauthenticated request  |
+| 403      | Unauthorized action      |
 
-##### Responses
-> | http code | description of answer                        |
-> | --------- | -------------------------------------------- |
-> | `200`     | `Information related to the given recipe id` |
-> | `404`     | `Recipe with given id doesn't exist`         |
+---
 
-</details>
+# Recipe Related
 
-<!-------------------------------------------------------------------------->
+## Recipe Structure
 
-<details>
- <summary><code>POST</code> <code><b>/recipe/</b></code> <code>(create a recipe)</code></summary>
+```json
+{
+  "id": 1,
+  "name": "Pasta",
+  "description": "Delicious pasta",
+  "dish_type": "main_dish",
+  "difficulty_level": "easy",
+  "creator_user_id": 2,
+  "steps": []
+}
+````
 
-##### Parameters
-> | name          | type     | data type | where | description                         |
-> | ------------- | -------- | --------- | ----- | ----------------------------------- |
-> | `name`        | required | string    | body  | name of the recipe to create        |
-> | `description` | optional | string    | body  | description of the recipe to create |
+### Constraints
 
-##### Responses
-> | http code | description of answer                                       |
-> | --------- | ----------------------------------------------------------- |
-> | `201`     | `Recipe was created. The id is also returned in the answer` |
+* dish_type: "starter" | "main_dish" | "dessert"
+* difficulty_level: "easy" | "medium" | "hard"
 
-</details>
+---
 
-<!-------------------------------------------------------------------------->
+## GET /recipe/
 
-<details>
- <summary><code>PATCH</code> <code><b>/recipe/{recipe_id}</b></code> <code>(update a recipe)</code></summary>
+Gets all recipes.
 
-##### Parameters
-> | name          | type     | data type | where | description                                   |
-> | ------------- | -------- | --------- | ----- | --------------------------------------------- |
-> | `recipe_id`   | required | int       | url   | id of the recipe to update                    |
-> | `name`        | optional | string    | body  | new name for the recipe (if changing)         |
-> | `description`| optional | string    | body  | new description for the recipe (if changing) |
+### Parameters
 
-##### Responses
-> | http code | description of answer                              |
-> | --------- | -------------------------------------------------- |
-> | `200`     | `Recipe updated successfully`                     |
-> | `400`     | `Invalid input data`                               |
-> | `404`     | `Recipe with given id doesn't exist`               |
-> | `403`     | `User is not the owner of the recipe`              |
-> | `401`     | `Unauthenticated request`                          |
+None
 
-</details>
+### Responses
 
-<!-------------------------------------------------------------------------->
+| HTTP Code | Description           |
+| --------- | --------------------- |
+| 200       | All available recipes |
 
-<details>
- <summary><code>DELETE</code> <code><b>/recipe/{recipe_id}</b></code> <code>(delete one recipe)</code></summary>
+---
 
-##### Parameters
-> | name        | type     | data type | where | description                |
-> | ----------- | -------- | --------- | ----- | -------------------------- |
-> | `recipe_id` | required | int       | url   | id of the recipe to delete |
+## GET /recipe/{recipe_id}
 
-##### Responses
-> | http code | description of answer                                 |
-> | --------- | ----------------------------------------------------- |
-> | `200`     | `The recipe, and all related steps have been deleted` |
-> | `404`     | `Recipe with given id doesn't exist`                  |
-> | `403`     | `The request was sent by a user which was not the owner of the recipe` |
-> | `401`     | `The request was sent by an unauthenticated user`    |
+Gets a specific recipe.
 
-</details>
+### Parameters
 
-<!-------------------------------------------------------------------------->
+| Name      | Type     | Data Type | Location | Description      |
+| --------- | -------- | --------- | -------- | ---------------- |
+| recipe_id | required | int       | url      | ID of the recipe |
 
-<details>
- <summary><code>GET</code> <code><b>/recipe/{recipe_id}/steps/</b></code> <code>(gets all the steps of the recipe)</code></summary>
+### Responses
 
-##### Parameters
-> | name        | type     | data type | where | description                                     |
-> | ----------- | -------- | --------- | ----- | ----------------------------------------------- |
-> | `recipe_id` | required | int       | body   | id of the recipe that we want to get the steps from |
+| HTTP Code | Description      |
+| --------- | ---------------- |
+| 200       | Recipe data      |
+| 404       | Recipe not found |
 
-##### Responses
-> | http code | description of answer |
-> | --------- | --------------------- |
-> | `200`     | `All steps where sent` |
-> | `404`     | `Recipe with given id doesn't exist` |
+---
 
-</details>
+## POST /recipe/
 
-<!-------------------------------------------------------------------------->
+Creates a recipe.
 
-## Step related
+### Parameters
 
-<details>
- <summary><code>GET</code> <code><b>/recipe/{recipe_id}/steps/{step_id}</b></code> <code>(gets a specific step)</code></summary>
+| Name             | Type     | Data Type | Location | Description        |
+| ---------------- | -------- | --------- | -------- | ------------------ |
+| name             | required | string    | body     | Recipe name        |
+| description      | optional | string    | body     | Recipe description |
+| dish_type        | required | string    | body     | Type of dish       |
+| difficulty_level | required | string    | body     | Difficulty level   |
+| creator_user_id  | optional | int       | body     | Creator ID         |
+| steps            | optional | array     | body     | List of steps      |
 
-##### Parameters
-> | name        | type     | data type | where | description                 |
-> | ----------- | -------- | --------- | ----- | --------------------------- |
-> | `recipe_id` | required | int       | url   | id of the parent recipe    |
-> | `step_id`   | required | int       | url   | id of the step to retrieve |
+### Step Object
 
-##### Responses
-> | http code | description of answer                                 |
-> | --------- | ----------------------------------------------------- |
-> | `200`     | `Step details`                                        |
-> | `404`     | `Recipe or step with given id doesn't exist`          |
+| Name                      | Type     | Data Type |
+| ------------------------- | -------- | --------- |
+| step_number               | required | int       |
+| name                      | required | string    |
+| estimated_time_in_seconds | required | int       |
 
-</details>
+### Responses
 
-<!-------------------------------------------------------------------------->
+| HTTP Code | Description     |
+| --------- | --------------- |
+| 201       | Recipe created  |
+| 400       | Invalid input   |
+| 401       | Unauthenticated |
 
-<details>
- <summary><code>POST</code> <code><b>/recipe/{recipe_id}/steps/</b></code> <code>(create a step for a recipe)</code></summary>
+---
 
-##### Parameters
-> | name          | type     | data type | where | description                                 |
-> | ------------- | -------- | --------- | ----- | ------------------------------------------- |
-> | `recipe_id`   | required | int       | url   | id of the recipe to which the step belongs |
-> | `order`       | required | int       | body  | order number of the step within the recipe |
-> | `instruction` | required | string    | body  | text describing the step                    |
+## PATCH /recipe/{recipe_id}
 
-##### Responses
-> | http code | description of answer                                 |
-> | --------- | ----------------------------------------------------- |
-> | `201`     | `Step created. The id is returned in the answer`      |
-> | `400`     | `Invalid input data`                                   |
-> | `404`     | `Recipe with given id doesn't exist`                  |
+Updates a recipe.
 
-</details>
+### Parameters
 
-<!-------------------------------------------------------------------------->
+| Name             | Type     | Data Type | Location | Description     |
+| ---------------- | -------- | --------- | -------- | --------------- |
+| recipe_id        | required | int       | url      | Recipe ID       |
+| name             | optional | string    | body     | New name        |
+| description      | optional | string    | body     | New description |
+| dish_type        | optional | string    | body     | New dish type   |
+| difficulty_level | optional | string    | body     | New difficulty  |
 
-<details>
- <summary><code>PATCH</code> <code><b>/recipe/{recipe_id}/steps/{step_id}</b></code> <code>(update a step)</code></summary>
+### Responses
 
-##### Parameters
-> | name          | type     | data type | where | description                                 |
-> | ------------- | -------- | --------- | ----- | ------------------------------------------- |
-> | `recipe_id`   | required | int       | url   | id of the parent recipe                     |
-> | `step_id`     | required | int       | url   | id of the step to update                    |
-> | `order`       | optional | int       | body  | new order number (if changed)               |
-> | `instruction` | optional | string    | body  | new instruction text (if changed)           |
+| HTTP Code | Description      |
+| --------- | ---------------- |
+| 200       | Recipe updated   |
+| 400       | Invalid input    |
+| 404       | Recipe not found |
+| 403       | Not owner        |
+| 401       | Unauthenticated  |
 
-##### Responses
-> | http code | description of answer                                 |
-> | --------- | ----------------------------------------------------- |
-> | `200`     | `Step updated successfully`                           |
-> | `400`     | `Invalid input data`                                   |
-> | `404`     | `Recipe or step with given id doesn't exist`          |
-> | `403`     | `User is not the owner of the step`                  |
-> | `401`     | `Unauthenticated request`                             |
+---
 
-</details>
+## DELETE /recipe/{recipe_id}
 
-<!-------------------------------------------------------------------------->
+Deletes a recipe.
 
-<details>
- <summary><code>DELETE</code> <code><b>/recipe/{recipe_id}/steps/{step_id}</b></code> <code>(delete a step)</code></summary>
+### Parameters
 
-##### Parameters
-> | name        | type     | data type | where | description                 |
-> | ----------- | -------- | --------- | ----- | --------------------------- |
-> | `recipe_id` | required | int       | url   | id of the parent recipe    |
-> | `step_id`   | required | int       | url   | id of the step to delete   |
+| Name      | Type     | Data Type | Location | Description |
+| --------- | -------- | --------- | -------- | ----------- |
+| recipe_id | required | int       | url      | Recipe ID   |
 
-##### Responses
-> | http code | description of answer                                 |
-> | --------- | ----------------------------------------------------- |
-> | `200`     | `Step deleted successfully`                           |
-> | `404`     | `Recipe or step with given id doesn't exist`          |
-> | `403`     | `User is not the owner of the step`                   |
-> | `401`     | `Unauthenticated request`                             |
+### Responses
 
-</details>
+| HTTP Code | Description      |
+| --------- | ---------------- |
+| 200       | Recipe deleted   |
+| 404       | Recipe not found |
+| 403       | Not owner        |
+| 401       | Unauthenticated  |
+
+---
+
+## GET /recipe/{recipe_id}/steps/
+
+Gets all steps of a recipe.
+
+### Parameters
+
+| Name      | Type     | Data Type | Location | Description |
+| --------- | -------- | --------- | -------- | ----------- |
+| recipe_id | required | int       | url      | Recipe ID   |
+
+### Responses
+
+| HTTP Code | Description      |
+| --------- | ---------------- |
+| 200       | Steps list       |
+| 404       | Recipe not found |
+
+---
+
+# Step Related
+
+## Step Structure
+
+```json
+{
+  "id": 1,
+  "related_recipe_id": 2,
+  "step_number": 1,
+  "name": "Boil water",
+  "description": "Heat water",
+  "estimated_time_in_seconds": 300
+}
+```
+
+---
+
+## GET /recipe/{recipe_id}/steps/{step_id}
+
+Gets a specific step.
+
+### Parameters
+
+| Name      | Type     | Data Type | Location | Description |
+| --------- | -------- | --------- | -------- | ----------- |
+| recipe_id | required | int       | url      | Recipe ID   |
+| step_id   | required | int       | url      | Step ID     |
+
+### Responses
+
+| HTTP Code | Description |
+| --------- | ----------- |
+| 200       | Step data   |
+| 404       | Not found   |
+
+---
+
+## POST /recipe/{recipe_id}/steps/
+
+Creates a step.
+
+### Parameters
+
+| Name                      | Type     | Data Type | Location | Description      |
+| ------------------------- | -------- | --------- | -------- | ---------------- |
+| recipe_id                 | required | int       | url      | Recipe ID        |
+| step_number               | required | int       | body     | Step order       |
+| name                      | required | string    | body     | Step name        |
+| description               | optional | string    | body     | Step description |
+| estimated_time_in_seconds | required | int       | body     | Time estimate    |
+
+### Responses
+
+| HTTP Code | Description      |
+| --------- | ---------------- |
+| 201       | Step created     |
+| 400       | Invalid input    |
+| 404       | Recipe not found |
+
+---
+
+## PATCH /recipe/{recipe_id}/steps/{step_id}
+
+Updates a step.
+
+### Parameters
+
+| Name                      | Type     | Data Type | Location | Description     |
+| ------------------------- | -------- | --------- | -------- | --------------- |
+| recipe_id                 | required | int       | url      | Recipe ID       |
+| step_id                   | required | int       | url      | Step ID         |
+| step_number               | optional | int       | body     | New order       |
+| name                      | optional | string    | body     | New name        |
+| description               | optional | string    | body     | New description |
+| estimated_time_in_seconds | optional | int       | body     | New time        |
+
+### Responses
+
+| HTTP Code | Description     |
+| --------- | --------------- |
+| 200       | Step updated    |
+| 400       | Invalid input   |
+| 404       | Not found       |
+| 403       | Not owner       |
+| 401       | Unauthenticated |
+
+---
+
+## DELETE /recipe/{recipe_id}/steps/{step_id}
+
+Deletes a step.
+
+### Parameters
+
+| Name      | Type     | Data Type | Location | Description |
+| --------- | -------- | --------- | -------- | ----------- |
+| recipe_id | required | int       | url      | Recipe ID   |
+| step_id   | required | int       | url      | Step ID     |
+
+### Responses
+
+| HTTP Code | Description     |
+| --------- | --------------- |
+| 200       | Step deleted    |
+| 404       | Not found       |
+| 403       | Not owner       |
+| 401       | Unauthenticated |
+
+---
+
+# User Related
+
+## GET /users/{id}
+
+Gets user information.
+
+### Parameters
+
+| Name | Type     | Data Type | Location | Description |
+| ---- | -------- | --------- | -------- | ----------- |
+| id   | required | int       | url      | User ID     |
+
+### Responses
+
+| HTTP Code | Description     |
+| --------- | --------------- |
+| 200       | User data       |
+| 404       | User not found  |
+| 401       | Unauthenticated |
+
+---
+
+## POST /users/register
+
+Creates a user.
+
+### Parameters
+
+| Name     | Type     | Data Type | Location | Description |
+| -------- | -------- | --------- | -------- | ----------- |
+| username | required | string    | body     | Username    |
+| email    | required | string    | body     | Email       |
+| password | required | string    | body     | Password    |
+
+### Responses
+
+| HTTP Code | Description               |
+| --------- | ------------------------- |
+| 201       | User created              |
+| 400       | Missing fields            |
+| 409       | Conflict (already exists) |
+
+---
+
+## POST /users/login
+
+Authenticates a user.
+
+### Parameters
+
+| Name     | Type     | Data Type | Location | Description |
+| -------- | -------- | --------- | -------- | ----------- |
+| email    | required | string    | body     | Email       |
+| password | required | string    | body     | Password    |
+
+### Responses
+
+| HTTP Code | Description         |
+| --------- | ------------------- |
+| 200       | Returns JWT token   |
+| 401       | Invalid credentials |
+
+### Example Response
+
+```json
+{
+  "token": "jwt_token_here"
+}
+```
+
+---
+
+# Error Format
+
+```json
+{
+  "error": "Error message"
+}
+```

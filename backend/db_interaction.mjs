@@ -7,8 +7,8 @@ import pg from 'pg';
 const { Pool } = pg;
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,       // TODO directly use "DB_URL from index.mjs ?"
-  ssl: { rejectUnauthorized: false }, // needed Render
+  connectionString: process.env.DATABASE_URL,       
+  ssl: { rejectUnauthorized: false },
 });
 
 pool.connect((err) => {

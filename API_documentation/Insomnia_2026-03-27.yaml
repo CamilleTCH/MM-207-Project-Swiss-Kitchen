@@ -1,0 +1,651 @@
+type: collection.insomnia.rest/5.0
+schema_version: "5.1"
+name: Scratch Pad
+meta:
+  id: wrk_scratchpad
+  created: 1769420975815
+  modified: 1769420975815
+  description: ""
+collection:
+  - url: "{{ baseUrl }}"
+    name: Root test
+    meta:
+      id: req_9a0acf0d25db4fccb49bc42d2f5c96cc
+      created: 1773429816656
+      modified: 1773431648390
+      isPrivate: false
+      description: ""
+      sortKey: -1773429816656
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/12.3.0
+        description: ""
+        disabled: false
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - name: Users
+    meta:
+      id: fld_54ee0dcbca1c47e3acb2084cb8101cd8
+      created: 1773431577938
+      modified: 1774089731909
+      sortKey: -1773431577939
+      description: ""
+    children:
+      - url: "{{ baseUrl }}/api/users/register"
+        name: Create user
+        meta:
+          id: req_4764264229fc43a7b2a051df16969cb2
+          created: 1773431582863
+          modified: 1773673128495
+          isPrivate: false
+          description: ""
+          sortKey: -1773431582863
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username": "Alice",
+            	"email": "alicelagoat@goat.com",
+            	"password": "1234"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/users/1"
+        name: Get a user
+        meta:
+          id: req_2691d67d127c4494a20138aa7e9c2978
+          created: 1773482166486
+          modified: 1773482249218
+          isPrivate: false
+          description: ""
+          sortKey: -1773482166486
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/users/2"
+        name: Delete a user
+        meta:
+          id: req_6367923ab0154af481b68915f8785fa8
+          created: 1773483545703
+          modified: 1774036185895
+          isPrivate: false
+          description: ""
+          sortKey: -1773483545703
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{ _.rolloTomasiToken }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/users/0"
+        name: Update user
+        meta:
+          id: req_8740512387324a6490a5b5281f2911b4
+          created: 1773485484762
+          modified: 1774002371826
+          isPrivate: false
+          description: ""
+          sortKey: -1773485484762
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username": "Rollo Tomasi"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/users/register"
+        name: Create Rollo Tomasi user
+        meta:
+          id: req_34cba035ecb84b518793e6d09023a4ed
+          created: 1773660356775
+          modified: 1773676552589
+          isPrivate: false
+          description: ""
+          sortKey: -1773430699759.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"username": "Rollo Tomasi",
+            	"email": "rollotomasi@originuser.com",
+            	"password": "dontremove it"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/users/login"
+        name: Login Rollo Tomasi
+        meta:
+          id: req_3bd4adebec0349e18a1ff494873ef543
+          created: 1773934918511
+          modified: 1774027768506
+          isPrivate: false
+          description: ""
+          sortKey: -1773934918511
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "rollotomasi@originuser.com",
+            	"password": "dontremove it"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        scripts:
+          afterResponse: |+
+            const json = await insomnia.response.json();
+            insomnia.environment.set("rolloTomasiToken", json.token);
+
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/users/login"
+        name: Login a user
+        meta:
+          id: req_39da779a0ea54b71af75e4354f151bc0
+          created: 1774036071662
+          modified: 1774036110356
+          isPrivate: false
+          description: ""
+          sortKey: -1773817866098.5
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"email": "alicelagoat@goat.com",
+            	"password": "1234"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+        scripts:
+          afterResponse: |+
+            const json = await insomnia.response.json();
+            insomnia.environment.set("rolloTomasiToken", json.token);
+
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Recipes
+    meta:
+      id: fld_4b664ab304fd44bf9e81043adcb1ec93
+      created: 1773489984455
+      modified: 1773489984455
+      sortKey: -1773489984455
+      description: ""
+    children:
+      - url: "{{ baseUrl }}/api/recipes/"
+        name: Create recipe
+        meta:
+          id: req_59ec362fa7d04980a09561cd5e0e8e21
+          created: 1773489989128
+          modified: 1773944322669
+          isPrivate: false
+          description: ""
+          sortKey: -1773489989128
+        method: POST
+        body:
+          mimeType: application/json
+          text: >-
+            {
+            	"name": "omelette champi",
+            	"creator_user_id": 0,
+            	"dish_type": "main_dish",
+            	"difficulty_level": "easy",
+            	"steps": [
+            		{
+            			"name": "Couper les champignons",
+            			"step_number": 1,
+            			"description": "Couper chaque champignon à la moitiée, puis en plus petits bouts",
+            			"estimated_time_in_seconds": 300
+            		},
+            		{
+            			"name": "Préparer la pâte",
+            			"step_number": 2,
+            			"description": "Casser les oeufs dans un saladier. Ajouter 3 cuillères à soupe de lait.",
+            			"estimated_time_in_seconds": 300
+            		}
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/recipes/"
+        name: Get all recipes
+        meta:
+          id: req_6c9660efb82e491caa77097c059883ab
+          created: 1773657927299
+          modified: 1773657939862
+          isPrivate: false
+          description: ""
+          sortKey: -1773657927299
+        method: GET
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/recipes/boom"
+        name: Get one recipe
+        meta:
+          id: req_92495978882040d2bab82db8d00fec98
+          created: 1773659324863
+          modified: 1773672659419
+          isPrivate: false
+          description: ""
+          sortKey: -1773659324863
+        method: GET
+        body:
+          mimeType: application/json
+          text: ""
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/recipes/2"
+        name: Update only the recipe
+        meta:
+          id: req_7e2d62043fd043e8be6a31e22b4b9568
+          created: 1773672611548
+          modified: 1773676820091
+          isPrivate: false
+          description: ""
+          sortKey: -1773672611548
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Omelette champi suprême",
+            	"description": "La meilleur omelette que tu connaisses",
+            	"dish_type": "main_dish",
+            	"steps": [
+            		{
+            			"name": "Rajouter de l'âme",
+            			"step_number": 5,
+            			"description": "Donne ton âme à l'omelette",
+            			"estimated_time_in_seconds": 300
+            		}
+            	]
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/recipes/"
+        name: Create recipe without steps
+        meta:
+          id: req_c9dab5bba4dd45f6b490c7b987bba5c9
+          created: 1773673571959
+          modified: 1774029005461
+          isPrivate: false
+          description: ""
+          sortKey: -1773487736945
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Soupe du néant",
+            	"creator_user_id": 0,
+            	"dish_type": "main_dish",
+            	"difficulty_level": "easy"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{rolloTomasiToken}}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/recipes/8"
+        name: Update it back
+        meta:
+          id: req_d8e97a54292f4e948a7ceb9bd7bf94ea
+          created: 1773674728691
+          modified: 1773675402121
+          isPrivate: false
+          description: ""
+          sortKey: -1773665968205.5
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"name": "Omelette champi",
+            	"description": "Une bonne omelette",
+            	"dish_type": "main_dish"
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/recipes/2"
+        name: Delete a recipe
+        meta:
+          id: req_04fb963ebde740ab8b978b4dff11ad7f
+          created: 1773676075649
+          modified: 1774089768141
+          isPrivate: false
+          description: ""
+          sortKey: -1773676075649
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        authentication:
+          type: bearer
+          token: "{{ _.rolloTomasiToken }}"
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/recipes/2/clearSteps"
+        name: Delete all steps of a recipe
+        meta:
+          id: req_d4193f68573f4738a1a9034977415cbc
+          created: 1773676896284
+          modified: 1773676921797
+          isPrivate: false
+          description: ""
+          sortKey: -1773674343598.5
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+  - name: Steps
+    meta:
+      id: fld_f95f30b3be394a099d181a4b9a1d4b13
+      created: 1773681869915
+      modified: 1773681882575
+      sortKey: -1773681869915
+      description: ""
+    children:
+      - url: "{{ baseUrl }}/api/recipes/2/steps"
+        name: Create a step for an existing recipe
+        meta:
+          id: req_81eab96c5cfb45e68725f72a07c2deda
+          created: 1773681883444
+          modified: 1773697024464
+          isPrivate: false
+          description: ""
+          sortKey: -1773681883444
+        method: POST
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"step_number": 6,
+            	"name" : "Ajouter plus d'aura",
+            	"description": "Ajoute encore plus de ton aura dans la recette",
+            	"estimated_time_in_seconds" : 200
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/recipes/2/steps/7"
+        name: Update an existing step
+        meta:
+          id: req_0481ba5000e74568bfbb7323a8252aa6
+          created: 1773696981316
+          modified: 1773700121105
+          isPrivate: false
+          description: ""
+          sortKey: -1773696981316
+        method: PUT
+        body:
+          mimeType: application/json
+          text: |-
+            {
+            	"step_number": 6,
+            	"name": "Essore l'âme du champi",
+            	"estimated_time_in_seconds": 200
+            }
+        headers:
+          - name: Content-Type
+            value: application/json
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+      - url: "{{ baseUrl }}/api/recipes/2/steps/5"
+        name: Delete one existing step
+        meta:
+          id: req_09ebda3558184164834d3017a3c9a60a
+          created: 1773700813686
+          modified: 1773700851658
+          isPrivate: false
+          description: ""
+          sortKey: -1773700813686
+        method: DELETE
+        headers:
+          - name: User-Agent
+            value: insomnia/12.3.0
+            description: ""
+            disabled: false
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1769420999956
+    modified: 1774089731904
+environments:
+  name: Base Environment
+  meta:
+    id: env_99d30891da4bdcebc63947a8fc17f076de878684
+    created: 1769420999955
+    modified: 1774089731909
+    isPrivate: false
+  subEnvironments:
+    - name: LocalDev
+      meta:
+        id: env_051adbeaba3f4d40853104a8061eb47b
+        created: 1773429905284
+        modified: 1774089731908
+        isPrivate: false
+        sortKey: 1773429905284
+      data:
+        baseUrl: http://localhost:3000
+        rolloTomasiToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MCwidXNlcm5hbWUiOiJSb2xsbyBUb21hc2kiLCJpYXQiOjE3NzQwODk3MzEsImV4cCI6MTc3NDE3NjEzMX0.E2hirBC84bbnuwa82-SfXfrTnM00gbMIzrGkQ7sHxsg
